@@ -29,7 +29,7 @@ package org.coreyoliver.dwolla {
 
     protected val apiUserAgent = Props.get("dwolla.userAgent") ?~! "dwolla.userAgent property is required."
 
-    protected val apiEndpointBase = Props.get("dwolla.apiEndPointBase") openOr "https://www.dwolla.com"
+    protected val apiEndpointBase = Props.get("dwolla.apiEndPointBase") openOr "www.dwolla.com"
 
     val oauthPermissions = Props.get("dwolla.oauthPermissions") ?~! "dwolla.oauthPermissions property is required."
 
