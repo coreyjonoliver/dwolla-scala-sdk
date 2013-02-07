@@ -17,7 +17,7 @@ package org.coreyoliver.dwolla.api {
 
     protected val className = this.getClass.getName.split("\\.").last.dropRight(1)
 
-    protected def resource : String = className.replaceAll("(.)([A-Z])", "$1_$2").toLowerCase
+    protected def resource : String = className.replaceAll("(.)([A-Z])", "$1_$2").toLowerCase + "s"
     protected def resourceIdentifier : String = resource + "_id"
     protected def extract(json:JValue) : Model
     protected def extractFindResults(json:JValue) : List[Model]
