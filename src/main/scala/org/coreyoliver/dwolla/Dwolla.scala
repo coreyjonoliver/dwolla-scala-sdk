@@ -111,7 +111,7 @@ package org.coreyoliver.dwolla {
 
     def executeAction(accessToken:Option[DwollaToken], module:String, action:Option[String], requestJson:JValue = JObject(Nil)) : Box[JValue] = {
       def doRequest(defaultHeaders:Map[String, String]) = {
-        val requestTarget = action.toList.foldLeft(host(apiEndpointBase) / module)(_ / _).secure
+        val requestTarget = action.toList.foldLeft(host(apiEndpointBase) / "oauth" / "rest" / module)(_ / _).secure
         val requestBody = compact(render(requestJson))
         val headers = accessToken.map { token =>
           Map("Authorization" -> token.httpHeader)
