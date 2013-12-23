@@ -1,10 +1,24 @@
-package examples;
+package dwolla.sdk.examples;
+
+import scala.util.{Success, Failure}
+import scala.concurrent.duration._
+import scala.concurrent.{Await, ExecutionContext}
+
+import akka.actor.ActorSystem
+//import akka.pattern.ask
+//import akka.event.Logging
+//import akka.io.IO
+//import spray.json.{JsonFormat, DefaultJsonProtocol}
+//import spray.can.Http
+//import spray.httpx.SprayJsonSupport
+//import spray.client.pipelining._
+import spray.util._
 
 object Main extends App {
    implicit val system = ActorSystem()
    implicit val timeout: Timeout = 1 minutes
    implicit val ec = ExecutionContext.global
-   implicit val accessToken = ???
+   implicit val accessToken = "some-token"
 
    val dwollaClient = new SprayClientDwollaSdk()
 
