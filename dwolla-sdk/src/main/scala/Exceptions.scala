@@ -1,4 +1,4 @@
-package dwolla.api
+package dwolla.sdk
 
 object Exceptions {
 
@@ -16,4 +16,5 @@ object Exceptions {
         "message: " + message + ")"
     }
   }
+
 }

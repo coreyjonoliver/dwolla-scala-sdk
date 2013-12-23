@@ -9,7 +9,7 @@ import akka.util.duration._
 import spray.can.client.HttpClient
 import spray.client.HttpConduit
 import spray.io._
-import dwolla.api.SprayClientDwollaApi
+import dwolla.sdk.SprayClientDwollaSdk
 ```
 
 additional setup may look like the following:
