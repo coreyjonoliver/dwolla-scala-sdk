@@ -6,7 +6,6 @@ import dwolla.sdk.Exceptions.DwollaException
 import spray.client.pipelining._
 import akka.util.Timeout
 import spray.http._
-import grizzled.slf4j.Logging
 import DwollaSdkJsonProtocol._
 import spray.json._
 import spray.can.client.HostConnectorSettings
@@ -15,7 +14,7 @@ import spray.can.Http.HostConnectorSetup
 class SprayClientDwollaSdk(settings: Option[HostConnectorSettings] = None)(
   implicit system: ActorSystem,
   timeout: Timeout,
-  ec: ExecutionContext) extends SprayHttpClient with DwollaSdk with Logging {
+  ec: ExecutionContext) extends SprayHttpClient with DwollaSdk {
 
   private val setup = HostConnectorSetup(
     host = "www.dwolla.com",
