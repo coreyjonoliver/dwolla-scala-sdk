@@ -9,7 +9,7 @@ import spray.can.Http.HostConnectorSetup
 import spray.client.pipelining._
 import akka.pattern.ask
 
-protected trait SprayHttpClient {
+private[sdk] trait SprayHttpClient {
   def pipeline(setup: HostConnectorSetup)(
     implicit system: ActorSystem,
     timeout: Timeout,

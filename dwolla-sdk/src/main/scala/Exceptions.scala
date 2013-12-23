@@ -1,20 +1,3 @@
 package dwolla.sdk
 
-object Exceptions {
-
-  object DwollaException {
-    def apply(message: String) = new DwollaException {
-      def message = message
-    }
-  }
-
-  trait DwollaException extends RuntimeException {
-    def message: String
-
-    override def toString = {
-      this.getClass.getName + "(" +
-        "message: " + message + ")"
-    }
-  }
-
-}
+private[sdk] class DwollaException(message: String) extends RuntimeException(message)

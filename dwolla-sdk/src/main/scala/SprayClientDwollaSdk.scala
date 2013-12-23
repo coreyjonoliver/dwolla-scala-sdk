@@ -2,7 +2,6 @@ package dwolla.sdk
 
 import scala.concurrent.{ExecutionContext, Future}
 import akka.actor.ActorSystem
-import dwolla.sdk.Exceptions.DwollaException
 import spray.client.pipelining._
 import akka.util.Timeout
 import spray.http._
@@ -34,7 +33,7 @@ class SprayClientDwollaSdk(settings: Option[HostConnectorSettings] = None)(
     if (parsedResponse.success) {
       parsedResponse.response.get
     } else {
-      throw DwollaException(parsedResponse.message)
+      throw new DwollaException(parsedResponse.message)
     }
   }
 

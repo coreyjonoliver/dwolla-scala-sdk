@@ -2,7 +2,7 @@ package dwolla.sdk
 
 import spray.json._
 
-object DwollaSdkJsonProtocol extends DefaultJsonProtocol {
+private[sdk] object DwollaSdkJsonProtocol extends CapitalizedJsonProtocol {
 
   case class Response[T: JsonFormat](success: Boolean, message: String, response: Option[T])
 
@@ -14,14 +14,7 @@ object DwollaSdkJsonProtocol extends DefaultJsonProtocol {
                                     state: String,
                                     `type`: String)
 
-  implicit def responseFormat[T: JsonFormat] = jsonFormat(Response.apply[T], "Success", "Message", "Response")
+  implicit def responseFormat[T: JsonFormat] = jsonFormat3(Response.apply[T])
 
-  implicit def fullAccountInformationFormat = jsonFormat(FullAccountInformation,
-    "City",
-    "Id",
-    "Latitude",
-    "Longitude",
-    "Name",
-    "State",
-    "Type")
+  implicit def fullAccountInformationFormat = jsonFormat7(FullAccountInformation)
 }
