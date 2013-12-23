@@ -1,0 +1,10 @@
+language: clojure
+scala:
+  - 2.10.3
+jdk:
+  - openjdk6
+  - openjdk7
+  - oraclejdk7
+notifications:
+  email:
+     - corey.jon.oliver@gmail.com
