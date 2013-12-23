@@ -37,11 +37,18 @@ class SprayClientDwollaSdk(settings: Option[HostConnectorSettings] = None)(
     }
   }
 
-  def getBalance()(implicit accessToken: String): Future[BigDecimal] = {
-    executeTo[BigDecimal](Get("/oauth/rest/balance/?oauth_token=%s" format accessToken), mapResponse[BigDecimal])
+  def getBalance(accessToken: String): Future[BigDecimal] = {
+    executeTo[BigDecimal](Get(s"/oauth/rest/balance/?oauth_token=$accessToken"), mapResponse[BigDecimal])
   }
 
-  def getFullAccountInformation()(implicit accessToken: String): Future[FullAccountInformation] = {
-    executeTo[FullAccountInformation](Get("/oauth/rest/users/?oauth_token=%s" format accessToken), mapResponse[FullAccountInformation])
+  def getFullAccountInformation(accessToken: String): Future[FullAccountInformation] = {
+    executeTo[FullAccountInformation](Get(s"/oauth/rest/users/?oauth_token=$accessToken"),
+      mapResponse[FullAccountInformation])
+  }
+
+  def getBasicAccountInformation(clientId: String, clientSecret: String,
+                                 accountIdentifier: String): Future[BasicAccountInformation] = {
+    executeTo[BasicAccountInformation](Get(s"/oauth/rest/users/$accountIdentifier?client_id=$clientId&client_secret" +
+      s"=$clientSecret"), mapResponse[BasicAccountInformation])
   }
 }

@@ -11,26 +11,31 @@ import spray.can.Http
 import spray.util._
 
 object Main extends App {
-   implicit val system = ActorSystem()
-   implicit val timeout: Timeout = 1 minutes
-   implicit val ec = ExecutionContext.global
-   implicit val accessToken = sys.env("DWOLLA_ACCESS_TOKEN")
+  implicit val system = ActorSystem()
+  implicit val timeout: Timeout = 1 minutes
+  implicit val ec = ExecutionContext.global
+  implicit val clientId = sys.env("DWOLLA_CLIENT_ID")
+  implicit val clientKey = sys.env("DWOLLA_SECRET")
+  implicit val accessToken = sys.env("DWOLLA_ACCESS_TOKEN")
 
-   val dwollaClient = new SprayClientDwollaSdk()
+  val dwollaClient = new SprayClientDwollaSdk()
 
-   val balanceFuture = dwollaClient.getBalance()
-   val fullAccountInfoFuture = dwollaClient.getFullAccountInformation()
+  val balanceFuture = dwollaClient.getBalance(accessToken)
+  val fullAccountInfoFuture = dwollaClient.getFullAccountInformation(accessToken)
+  val basicAccountInfoFuture = dwollaClient.getBasicAccountInformation(clientId, clientKey, "812-713-9234")
 
-   val balanceResult = Await.result(balanceFuture, timeout.duration)
-   val fullAccountInfoResult = Await.result(fullAccountInfoFuture, timeout.duration)
+  val balanceResult = Await.result(balanceFuture, timeout.duration)
+  val fullAccountInfoResult = Await.result(fullAccountInfoFuture, timeout.duration)
+  val basicAccountInfoResult = Await.result(basicAccountInfoFuture, timeout.duration)
 
-   println(balanceResult)
-   println(fullAccountInfoResult)
+  println(balanceResult)
+  println(fullAccountInfoResult)
+  println(basicAccountInfoResult)
 
-   shutdown()
+  shutdown()
 
-   def shutdown() {
-     IO(Http).ask(Http.CloseAll)(1 second).await
-     system.shutdown()
-   }
- }
+  def shutdown() {
+    IO(Http).ask(Http.CloseAll)(1 second).await
+    system.shutdown()
+  }
+}

@@ -14,7 +14,14 @@ private[sdk] object DwollaSdkJsonProtocol extends CapitalizedJsonProtocol {
                                     state: String,
                                     `type`: String)
 
+  case class BasicAccountInformation(id: String,
+                                     latitude: BigDecimal,
+                                     longitude: BigDecimal,
+                                     name: String)
+
   implicit def responseFormat[T: JsonFormat] = jsonFormat3(Response.apply[T])
 
   implicit def fullAccountInformationFormat = jsonFormat7(FullAccountInformation)
+
+  implicit def basicAccountInformationFormat = jsonFormat4(BasicAccountInformation)
 }

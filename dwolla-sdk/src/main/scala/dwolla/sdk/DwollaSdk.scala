@@ -1,10 +1,13 @@
 package dwolla.sdk
 
 import scala.concurrent.Future
-import dwolla.sdk.DwollaSdkJsonProtocol.FullAccountInformation
+import dwolla.sdk.DwollaSdkJsonProtocol._
 
 private[sdk] trait DwollaSdk {
-  def getBalance()(implicit accessToken: String): Future[BigDecimal]
+  def getBalance(accessToken: String): Future[BigDecimal]
 
-  def getFullAccountInformation()(implicit accessToken: String): Future[FullAccountInformation]
+  def getFullAccountInformation(accessToken: String): Future[FullAccountInformation]
+
+  def getBasicAccountInformation(clientId: String, clientSecret: String,
+                                 accountIdentifier: String): Future[BasicAccountInformation]
 }
