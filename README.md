@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.org/coreyjonoliver/dwolla-sdk-scala.png?branch=master)](https://travis-ci.org/coreyjonoliver/dwolla-sdk-scala) [![Dependencies Status](http://jarkeeper.com/coreyjonoliver/dwolla-sdk-scala/status.png)](http://jarkeeper.com/coreyjonoliver/dwolla-sdk-scala)
-
+[![Build Status](https://travis-ci.org/coreyjonoliver/dwolla-sdk-scala.png?branch=master)](https://travis-ci.org/coreyjonoliver/dwolla-sdk-scala)
 ### Usage
 
 _dwolla-scala_ is simple to use. Begin by providing the appropriate imports.  
