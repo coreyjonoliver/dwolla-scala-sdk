@@ -15,22 +15,25 @@ object Main extends App {
   implicit val timeout: Timeout = 1 minutes
   implicit val ec = ExecutionContext.global
   implicit val clientId = sys.env("DWOLLA_CLIENT_ID")
-  implicit val clientKey = sys.env("DWOLLA_SECRET")
+  implicit val clientSecret = sys.env("DWOLLA_SECRET")
   implicit val accessToken = sys.env("DWOLLA_ACCESS_TOKEN")
 
   val dwollaClient = new SprayClientDwollaSdk()
 
   val balanceFuture = dwollaClient.getBalance(accessToken)
   val fullAccountInfoFuture = dwollaClient.getFullAccountInformation(accessToken)
-  val basicAccountInfoFuture = dwollaClient.getBasicAccountInformation(clientId, clientKey, "812-713-9234")
+  val basicAccountInfoFuture = dwollaClient.getBasicAccountInformation(clientId, clientSecret, "812-713-9234")
+  val nearbyFuture = dwollaClient.getNearby(clientId, clientSecret, 40, -74)
 
   val balanceResult = Await.result(balanceFuture, timeout.duration)
   val fullAccountInfoResult = Await.result(fullAccountInfoFuture, timeout.duration)
   val basicAccountInfoResult = Await.result(basicAccountInfoFuture, timeout.duration)
+  val nearbyResult = Await.result(nearbyFuture, timeout.duration)
 
   println(balanceResult)
   println(fullAccountInfoResult)
   println(basicAccountInfoResult)
+  println(nearbyResult)
 
   shutdown()
 

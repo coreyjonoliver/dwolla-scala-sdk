@@ -10,4 +10,7 @@ private[sdk] trait DwollaSdk {
 
   def getBasicAccountInformation(clientId: String, clientSecret: String,
                                  accountIdentifier: String): Future[BasicAccountInformation]
+
+  def getNearby(clientId: String, clientSecret: String, latitude: BigDecimal,
+                longitude: BigDecimal): Future[Seq[NearbyElement]]
 }

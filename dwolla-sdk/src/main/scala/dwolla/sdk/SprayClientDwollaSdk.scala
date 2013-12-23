@@ -51,4 +51,11 @@ class SprayClientDwollaSdk(settings: Option[HostConnectorSettings] = None)(
     executeTo[BasicAccountInformation](Get(s"/oauth/rest/users/$accountIdentifier?client_id=$clientId&client_secret" +
       s"=$clientSecret"), mapResponse[BasicAccountInformation])
   }
+
+  def getNearby(clientId: String, clientSecret: String, latitude: BigDecimal,
+                longitude: BigDecimal): Future[Seq[NearbyElement]] = {
+    executeTo[Seq[NearbyElement]](Get(s"/oauth/rest/users/nearby?client_id=$clientId&client_secret=$clientSecret" +
+      s"&latitude" +
+      s"=$latitude&longitude=$longitude"), mapResponse[Seq[NearbyElement]])
+  }
 }
