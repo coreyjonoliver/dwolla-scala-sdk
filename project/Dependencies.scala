@@ -19,4 +19,5 @@ object Dependencies {
   val sprayClient = "io.spray" % "spray-client" % "1.2.0"
   val sprayJson = "io.spray" % "spray-json_2.10" % "1.2.5"
   val akkaActor = "com.typesafe.akka" % "akka-actor_2.10" % "2.2.3"
+  val nscalaTime = "com.github.nscala-time" %% "nscala-time" % "0.6.0"
 }
