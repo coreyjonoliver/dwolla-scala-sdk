@@ -12,7 +12,7 @@ import spray.util._
 
 object Main extends App {
   implicit val system = ActorSystem()
-  implicit val timeout: Timeout = 1 minutes
+  implicit val timeout: Timeout = 1.minutes
   implicit val ec = ExecutionContext.global
   implicit val clientId = sys.env("DWOLLA_CLIENT_ID")
   implicit val clientSecret = sys.env("DWOLLA_SECRET")
@@ -38,7 +38,7 @@ object Main extends App {
   shutdown()
 
   def shutdown() {
-    IO(Http).ask(Http.CloseAll)(1 second).await
+    IO(Http).ask(Http.CloseAll)(1.second).await
     system.shutdown()
   }
 }

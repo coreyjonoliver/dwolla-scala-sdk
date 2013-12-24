@@ -38,24 +38,29 @@ class SprayClientDwollaSdk(settings: Option[HostConnectorSettings] = None)(
   }
 
   def getBalance(accessToken: String): Future[BigDecimal] = {
-    executeTo[BigDecimal](Get(s"/oauth/rest/balance/?oauth_token=$accessToken"), mapResponse[BigDecimal])
+    val uri = Uri("/oauth/rest/balance/").withQuery(Map("oauth_token" -> accessToken))
+    executeTo[BigDecimal](Get(uri), mapResponse[BigDecimal])
   }
 
   def getFullAccountInformation(accessToken: String): Future[FullAccountInformation] = {
-    executeTo[FullAccountInformation](Get(s"/oauth/rest/users/?oauth_token=$accessToken"),
+    val uri = Uri("/oauth/rest/users/").withQuery(Map("oauth_token" -> accessToken))
+    executeTo[FullAccountInformation](Get(uri),
       mapResponse[FullAccountInformation])
   }
 
   def getBasicAccountInformation(clientId: String, clientSecret: String,
                                  accountIdentifier: String): Future[BasicAccountInformation] = {
-    executeTo[BasicAccountInformation](Get(s"/oauth/rest/users/$accountIdentifier?client_id=$clientId&client_secret" +
-      s"=$clientSecret"), mapResponse[BasicAccountInformation])
+    val uri = Uri(s"/oauth/rest/users/$accountIdentifier")
+    val uriWithQuery = uri.withQuery(Map("client_id" -> clientId, "client_secret" -> clientSecret))
+    executeTo[BasicAccountInformation](Get(uriWithQuery), mapResponse[BasicAccountInformation])
   }
 
   def getNearby(clientId: String, clientSecret: String, latitude: BigDecimal,
                 longitude: BigDecimal): Future[Seq[NearbyElement]] = {
-    executeTo[Seq[NearbyElement]](Get(s"/oauth/rest/users/nearby?client_id=$clientId&client_secret=$clientSecret" +
-      s"&latitude" +
-      s"=$latitude&longitude=$longitude"), mapResponse[Seq[NearbyElement]])
+    val uri = Uri("/oauth/rest/users/nearby")
+    val uriWithQuery = uri.withQuery(Map("client_id" -> clientId, "client_secret" -> clientSecret,
+      "latitude" -> latitude.toString,
+      "longitude" -> longitude.toString))
+    executeTo[Seq[NearbyElement]](Get(uriWithQuery), mapResponse[Seq[NearbyElement]])
   }
 }
