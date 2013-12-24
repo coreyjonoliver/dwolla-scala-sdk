@@ -29,11 +29,15 @@ class SprayClientDwollaSdk(settings: Option[HostConnectorSettings] = None)(
   private def executeTo[T](req: HttpRequest, m: (HttpResponse => T)): Future[T] = execute(req).map(m)
 
   private def mapResponse[T: JsonFormat](response: HttpResponse) = {
-    val parsedResponse = response.entity.asString.asJson.convertTo[Response[T]]
-    if (parsedResponse.success) {
-      parsedResponse.response.get
+    if (response.status.isSuccess) {
+      val parsedResponse = response.entity.asString.asJson.convertTo[Response[T]]
+      if (parsedResponse.success) {
+        parsedResponse.response.get
+      } else {
+        throw new DwollaException(parsedResponse.message)
+      }
     } else {
-      throw new DwollaException(parsedResponse.message)
+      throw new DwollaException("Unsuccessful response: " + response.entity.asString)
     }
   }
 
