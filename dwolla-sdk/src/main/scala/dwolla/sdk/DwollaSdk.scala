@@ -16,5 +16,5 @@ private[sdk] trait DwollaSdk {
                                  accountIdentifier: String): Future[BasicAccountInformation]
 
   def getNearby(clientId: String, clientSecret: String, latitude: BigDecimal,
-                longitude: BigDecimal): Future[Seq[NearbyElement]]
+                longitude: BigDecimal): Future[Seq[NearbyDetails]]
 }

@@ -7,7 +7,7 @@ private[sdk] object DwollaSdkJsonProtocol extends CapitalizedJsonProtocol {
 
   case class Response[T: JsonFormat](success: Boolean, message: String, response: Option[T])
 
-  case class FeeElement(id: Int, amount: BigDecimal, `type`: String)
+  case class FeeDetails(id: Int, amount: BigDecimal, `type`: String)
 
   case class TransactionDetails(amount: BigDecimal,
                                 date: Option[DateTime],
@@ -21,7 +21,7 @@ private[sdk] object DwollaSdkJsonProtocol extends CapitalizedJsonProtocol {
                                 status: String,
                                 clearingDate: Option[DateTime],
                                 notes: String,
-                                fees: Option[Seq[FeeElement]])
+                                fees: Option[Seq[FeeDetails]])
 
   case class FullAccountInformation(city: String,
                                     id: String,
@@ -36,7 +36,7 @@ private[sdk] object DwollaSdkJsonProtocol extends CapitalizedJsonProtocol {
                                      longitude: BigDecimal,
                                      name: String)
 
-  case class NearbyElement(id: String,
+  case class NearbyDetails(id: String,
                            latitude: BigDecimal,
                            name: String,
                            longitude: BigDecimal,
@@ -64,7 +64,7 @@ private[sdk] object DwollaSdkJsonProtocol extends CapitalizedJsonProtocol {
 
   implicit def responseFormat[T: JsonFormat] = jsonFormat3(Response.apply[T])
 
-  implicit def feeElementFormat = jsonFormat3(FeeElement)
+  implicit def feeDetailsFormat = jsonFormat3(FeeDetails)
 
   implicit def transactionDetailsFormat = jsonFormat13(TransactionDetails)
 
@@ -72,5 +72,5 @@ private[sdk] object DwollaSdkJsonProtocol extends CapitalizedJsonProtocol {
 
   implicit def basicAccountInformationFormat = jsonFormat4(BasicAccountInformation)
 
-  implicit def nearbyElementFormat = jsonFormat6(NearbyElement)
+  implicit def nearbyDetailsFormat = jsonFormat6(NearbyDetails)
 }
