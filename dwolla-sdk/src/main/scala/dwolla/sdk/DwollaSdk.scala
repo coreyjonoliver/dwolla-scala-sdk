@@ -6,6 +6,8 @@ import dwolla.sdk.DwollaSdkJsonProtocol._
 private[sdk] trait DwollaSdk {
   def getTransactionDetails(accessToken: String, transactionId: Int): Future[TransactionDetails]
 
+  def getAllTransactions(accessToken: String): Future[Seq[TransactionDetails]]
+
   def getBalance(accessToken: String): Future[BigDecimal]
 
   def getFullAccountInformation(accessToken: String): Future[FullAccountInformation]
