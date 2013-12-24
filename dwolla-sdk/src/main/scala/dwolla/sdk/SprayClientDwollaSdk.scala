@@ -42,6 +42,13 @@ class SprayClientDwollaSdk(settings: Option[HostConnectorSettings] = None)(
     executeTo[Seq[TransactionDetails]](Get(uri), mapResponse[Seq[TransactionDetails]])
   }
 
+  def send(accessToken: String, pin: Int, destinationId: String, amount: BigDecimal): Future[Int] = {
+    val uri = Uri("/oauth/rest/transactions/send")
+    val formData = FormData(Map("oauth_token" -> accessToken, "pin" -> pin.toString,
+      "destinationId" -> destinationId, "amount" -> amount.toString))
+    executeTo[Int](Post(uri, formData), mapResponse[Int])
+  }
+
   def getTransactionDetails(accessToken: String, transactionId: Int): Future[TransactionDetails] = {
     val uri = Uri(s"/oauth/rest/transactions/$transactionId").withQuery(Map("oauth_token" -> accessToken))
     executeTo[TransactionDetails](Get(uri), mapResponse[TransactionDetails])

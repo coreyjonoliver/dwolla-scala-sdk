@@ -8,6 +8,8 @@ private[sdk] trait DwollaSdk {
 
   def getAllTransactions(accessToken: String): Future[Seq[TransactionDetails]]
 
+  def send(accessToken: String, pin: Int, destinationId: String, amount: BigDecimal): Future[Int]
+
   def getBalance(accessToken: String): Future[BigDecimal]
 
   def getFullAccountInformation(accessToken: String): Future[FullAccountInformation]
