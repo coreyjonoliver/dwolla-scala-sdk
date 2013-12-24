@@ -20,16 +20,19 @@ object Main extends App {
 
   val dwollaClient = new SprayClientDwollaSdk()
 
+  val transactionDetailsFuture = dwollaClient.getTransactionDetails(accessToken, 3983417)
   val balanceFuture = dwollaClient.getBalance(accessToken)
   val fullAccountInfoFuture = dwollaClient.getFullAccountInformation(accessToken)
   val basicAccountInfoFuture = dwollaClient.getBasicAccountInformation(clientId, clientSecret, "812-713-9234")
   val nearbyFuture = dwollaClient.getNearby(clientId, clientSecret, 40, -74)
 
+  val transactionDetailsResult = Await.result(transactionDetailsFuture, timeout.duration)
   val balanceResult = Await.result(balanceFuture, timeout.duration)
   val fullAccountInfoResult = Await.result(fullAccountInfoFuture, timeout.duration)
   val basicAccountInfoResult = Await.result(basicAccountInfoFuture, timeout.duration)
   val nearbyResult = Await.result(nearbyFuture, timeout.duration)
 
+  println(transactionDetailsResult)
   println(balanceResult)
   println(fullAccountInfoResult)
   println(basicAccountInfoResult)

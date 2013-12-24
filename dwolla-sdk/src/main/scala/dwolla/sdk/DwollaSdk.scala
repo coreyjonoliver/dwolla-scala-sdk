@@ -4,6 +4,8 @@ import scala.concurrent.Future
 import dwolla.sdk.DwollaSdkJsonProtocol._
 
 private[sdk] trait DwollaSdk {
+  def getTransactionDetails(accessToken: String, transactionId: Int): Future[TransactionDetails]
+
   def getBalance(accessToken: String): Future[BigDecimal]
 
   def getFullAccountInformation(accessToken: String): Future[FullAccountInformation]
