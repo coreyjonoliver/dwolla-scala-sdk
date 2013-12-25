@@ -6,8 +6,9 @@ jdk:
   - openjdk7
   - oraclejdk7
 env:
-  - secure: "l+u3rdwefma/qVV3o2bP/MEklVp1hiDfTZoZirR8nWfMghnh2bUBejesM3+eryKAzMSRMS+obKczNs4RCoAHaKaTF9KiD+FNYN93p3yL51FwA2SB0Y6aIv86KCrhLY/LHE/jkqB5Anr+rGMt4V5ChkJciN3yT+nPUYBo26rk7es="
-  - secure: "HYf67ZlzJwuUu/VxWgqmWYRBXHBGt2pzEzARLPwjRT1VPFXTIzHy2IZ2y6K6X3oJ1vsTlDZ25tPXzeRnhMARGMu7BAJSKSk7w6rIwlrEgoLH5UzGnpS7tAvK79nQflqTf+cN9zDe5ES83ygcCI4hSeAQYtjJqO+A+BaINicCdY8="
+  global:
+    - secure: "l+u3rdwefma/qVV3o2bP/MEklVp1hiDfTZoZirR8nWfMghnh2bUBejesM3+eryKAzMSRMS+obKczNs4RCoAHaKaTF9KiD+FNYN93p3yL51FwA2SB0Y6aIv86KCrhLY/LHE/jkqB5Anr+rGMt4V5ChkJciN3yT+nPUYBo26rk7es="
+    - secure: "HYf67ZlzJwuUu/VxWgqmWYRBXHBGt2pzEzARLPwjRT1VPFXTIzHy2IZ2y6K6X3oJ1vsTlDZ25tPXzeRnhMARGMu7BAJSKSk7w6rIwlrEgoLH5UzGnpS7tAvK79nQflqTf+cN9zDe5ES83ygcCI4hSeAQYtjJqO+A+BaINicCdY8="
 notifications:
   email:
      - corey.jon.oliver@gmail.com
