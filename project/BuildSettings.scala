@@ -3,7 +3,7 @@ import Keys._
 import com.typesafe.sbt.SbtPgp
 
 object BuildSettings {
-  val VERSION = "1.0-SNAPSHOT"
+  val VERSION = "1.0.0-SNAPSHOT"
 
   lazy val basicSettings = Seq(
     version := VERSION,
@@ -54,7 +54,7 @@ object BuildSettings {
               </license>
             </licenses>
             <scm>
-              <url>git://github.com/spray/spray.git</url>
+              <url>git://github.com/coreyjonoliver/dwolla-sdk-scala.git</url>
               <connection>scm:git:git@github.com:coreyjonoliver/dwolla-sdk-scala.git</connection>
             </scm>
             <developers>

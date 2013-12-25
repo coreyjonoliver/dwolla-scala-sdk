@@ -6,11 +6,6 @@ object Build extends Build {
   import BuildSettings._
   import Dependencies._
 
-  lazy val buildSettings = Seq(
-    organization := "com.dwolla",
-    version := "0.1",
-    scalaVersion := "2.10.3"
-  )
   lazy val root = Project(id = "root",
     base = file("."))
     .aggregate(dwollaSdk, examples)
