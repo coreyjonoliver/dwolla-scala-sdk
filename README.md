@@ -8,6 +8,8 @@ dwolla-sdk-scala
 _dwolla-sdk-scala_ is available on the [Maven Central](http://www.sonatype.org/central) repository. There is no
 current release version, but a SNAPSHOT for version `1.0.0` is currently available.
 
+If you use SBT you can include _dwolla-sdk-scala_ with:
+
 ```scala
 libraryDependencies += "com.dwolla" %%  "dwolla-sdk-scala" % "1.0.0"
 ```
