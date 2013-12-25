@@ -6,7 +6,7 @@ dwolla-sdk-scala
 
 
 ## License
-MIT/X11 - See [LICENSE][2]
+Apache 2 - See [LICENSE][2]
 
 [2]: http://github.com/coreyjonoliver/dwolla-sdk-scala/blob/master/LICENSE
 
