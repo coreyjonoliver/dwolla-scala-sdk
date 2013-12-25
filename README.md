@@ -15,7 +15,7 @@ libraryDependencies += "com.dwolla" %%  "dwolla-sdk-scala" % "1.0.0"
 ```
 
 ## Usage
-_dwolla-sdk-scala is easy to use.
+_dwolla-sdk-scala_ is easy to use.
 Start by defining implicits of the following types:
 
 ```scala
