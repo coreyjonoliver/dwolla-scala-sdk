@@ -64,8 +64,8 @@ object BuildSettings {
             </developers>,
         credentials += Credentials("Sonatype Nexus Repository Manager",
           "oss.sonatype.org",
-          sys.env("DWOLLA_PUBLISH_USERNAME"),
-          sys.env("DWOLLA_PUBLISH_PASSWORD"))
+          scala.util.Properties.envOrElse("DWOLLA_PUBLISH_USERNAME", ""),
+          scala.util.Properties.envOrElse("DWOLLA_PUBLISH_PASSWORD", ""))
       )
 
   lazy val noPublishing = seq(
