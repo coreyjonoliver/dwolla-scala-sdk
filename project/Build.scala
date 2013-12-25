@@ -12,9 +12,11 @@ object Build extends Build {
     scalaVersion := "2.10.3"
   )
   lazy val root = Project(id = "root",
-    base = file(".")) aggregate(dwollaSdk, examples)
+    base = file("."))
+    .aggregate(dwollaSdk, examples)
+    .settings(noPublishing: _*)
 
-  lazy val dwollaSdk = Project(id = "dwolla-sdk", base = file("dwolla-sdk"))
+  lazy val dwollaSdk = Project(id = "dwolla-scala-sdk", base = file("dwolla-sdk"))
     .settings(dwollaModuleSettings: _*)
     .settings(libraryDependencies ++=
     provided(akkaActor, sprayClient, sprayJson, nscalaTime)
@@ -23,6 +25,7 @@ object Build extends Build {
   lazy val examples = Project(id = "examples", base = file("examples"))
     .dependsOn(dwollaSdk)
     .settings(dwollaModuleSettings: _*)
+    .settings(noPublishing: _*)
     .settings(libraryDependencies ++=
     compile(sprayClient, sprayJson, akkaActor, nscalaTime)
     )

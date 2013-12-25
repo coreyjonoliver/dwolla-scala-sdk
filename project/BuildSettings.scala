@@ -64,7 +64,15 @@ object BuildSettings {
             </developers>,
         credentials += Credentials("Sonatype Nexus Repository Manager",
           "oss.sonatype.org",
-          "sys.env(\"DWOLLA_PUBLISH_USERNAME\")",
-          "sys.env(\"DWOLLA_PUBLISH_PASSWORD\")")
+          sys.env("DWOLLA_PUBLISH_USERNAME"),
+          sys.env("DWOLLA_PUBLISH_PASSWORD"))
       )
+
+  lazy val noPublishing = seq(
+    publish := (),
+    publishLocal := (),
+    // required until these tickets are closed https://github.com/sbt/sbt-pgp/issues/42,
+    // https://github.com/sbt/sbt-pgp/issues/36
+    publishTo := None
+  )
 }
