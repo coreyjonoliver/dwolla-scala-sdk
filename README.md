@@ -24,7 +24,7 @@ implicit val timeout: Timeout = 1.minutes
 implicit val ec = ExecutionContext.global
 ```
 
-Next create an instance of `SprayClientDwollaSdk:
+Next create an instance of `SprayClientDwollaSdk`:
 
 ```scala
 val dwollaClient = new SprayClientDwollaSdk()
