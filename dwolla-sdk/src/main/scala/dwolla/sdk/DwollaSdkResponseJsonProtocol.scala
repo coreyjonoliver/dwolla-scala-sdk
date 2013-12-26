@@ -3,7 +3,7 @@ package dwolla.sdk
 import spray.json._
 import com.github.nscala_time.time.Imports._
 
-private[sdk] object DwollaSdkJsonProtocol extends CapitalizedJsonProtocol {
+private[sdk] object DwollaSdkResponseJsonProtocol extends CapitalizedJsonProtocol {
 
   case class Response[T: JsonFormat](success: Boolean, message: String, response: Option[T])
 

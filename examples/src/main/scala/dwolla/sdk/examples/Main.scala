@@ -18,7 +18,7 @@ object Main extends App {
   val clientId = sys.env("DWOLLA_CLIENT_ID")
   val clientSecret = sys.env("DWOLLA_SECRET")
   val accessToken = sys.env("DWOLLA_ACCESS_TOKEN")
-  val pin = sys.env("DWOLLA_PIN").toInt
+  val pin = sys.env("DWOLLA_PIN")
 
   val dwollaClient = new SprayClientDwollaSdk()
 

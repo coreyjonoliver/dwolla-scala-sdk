@@ -1,14 +1,23 @@
 package dwolla.sdk
 
 import scala.concurrent.Future
-import dwolla.sdk.DwollaSdkJsonProtocol._
+import dwolla.sdk.DwollaSdkResponseJsonProtocol._
+
+private[sdk] case class FacilitatorFee(destinationId: String,
+                          amount: BigDecimal)
 
 private[sdk] trait DwollaSdk {
+
   def getTransactionDetails(accessToken: String, transactionId: Int): Future[TransactionDetails]
 
   def getAllTransactions(accessToken: String): Future[Seq[TransactionDetails]]
 
-  def send(accessToken: String, pin: Int, destinationId: String, amount: BigDecimal): Future[Int]
+  def send(accessToken: String, pin: String, destinationId: String, amount: BigDecimal,
+           destinationType: Option[String] = None,
+           facilitatorAmount: Option[BigDecimal] = None, assumeCosts: Option[Boolean] = None,
+           notes: Option[String] = None,
+           additionalFees: Option[Seq[FacilitatorFee]] = None, assumeAdditionalFees: Option[Boolean] = None):
+  Future[Int]
 
   def getBalance(accessToken: String): Future[BigDecimal]
 

@@ -5,10 +5,12 @@ import akka.actor.ActorSystem
 import spray.client.pipelining._
 import akka.util.Timeout
 import spray.http._
-import DwollaSdkJsonProtocol._
+import DwollaSdkResponseJsonProtocol._
 import spray.json._
 import spray.can.client.HostConnectorSettings
 import spray.can.Http.HostConnectorSetup
+import spray.httpx.SprayJsonSupport._
+import dwolla.sdk.DwollaSdkRequestJsonProtocol.SendRequest
 
 class SprayClientDwollaSdk(settings: Option[HostConnectorSettings] = None)(
   implicit system: ActorSystem,
@@ -46,11 +48,16 @@ class SprayClientDwollaSdk(settings: Option[HostConnectorSettings] = None)(
     executeTo[Seq[TransactionDetails]](Get(uri), mapResponse[Seq[TransactionDetails]])
   }
 
-  def send(accessToken: String, pin: Int, destinationId: String, amount: BigDecimal): Future[Int] = {
+  def send(accessToken: String, pin: String, destinationId: String, amount: BigDecimal,
+           destinationType: Option[String] = None,
+           facilitatorAmount: Option[BigDecimal] = None, assumeCosts: Option[Boolean] = None,
+           notes: Option[String] = None,
+           additionalFees: Option[Seq[FacilitatorFee]] = None, assumeAdditionalFees: Option[Boolean] = None):
+  Future[Int] = {
     val uri = Uri("/oauth/rest/transactions/send")
-    val formData = FormData(Map("oauth_token" -> accessToken, "pin" -> pin.toString,
-      "destinationId" -> destinationId, "amount" -> amount.toString))
-    executeTo[Int](Post(uri, formData), mapResponse[Int])
+    val raw = SendRequest(accessToken, pin, destinationId, amount, destinationType, facilitatorAmount, assumeCosts,
+      notes, additionalFees, assumeAdditionalFees)
+    executeTo[Int](Post(uri, raw), mapResponse[Int])
   }
 
   def getTransactionDetails(accessToken: String, transactionId: Int): Future[TransactionDetails] = {
