@@ -9,6 +9,7 @@ import DwollaSdkJsonProtocol._
 import spray.json._
 import spray.can.client.HostConnectorSettings
 import spray.can.Http.HostConnectorSetup
+import spray.httpx.SprayJsonSupport._
 
 class SprayClientDwollaSdk(settings: Option[HostConnectorSettings] = None)(
   implicit system: ActorSystem,
@@ -48,9 +49,9 @@ class SprayClientDwollaSdk(settings: Option[HostConnectorSettings] = None)(
 
   def send(accessToken: String, pin: Int, destinationId: String, amount: BigDecimal): Future[Int] = {
     val uri = Uri("/oauth/rest/transactions/send")
-    val formData = FormData(Map("oauth_token" -> accessToken, "pin" -> pin.toString,
-      "destinationId" -> destinationId, "amount" -> amount.toString))
-    executeTo[Int](Post(uri, formData), mapResponse[Int])
+    val raw = Map("oauth_token" -> accessToken, "pin" -> pin.toString,
+      "destinationId" -> destinationId, "amount" -> amount.toString)
+    executeTo[Int](Post(uri, raw), mapResponse[Int])
   }
 
   def getTransactionDetails(accessToken: String, transactionId: Int): Future[TransactionDetails] = {
