@@ -9,39 +9,20 @@ private[sdk] object DwollaSdkResponseJsonProtocol extends CapitalizedJsonProtoco
 
   case class FeeDetails(id: Int, amount: BigDecimal, `type`: String)
 
-  case class TransactionDetails(amount: BigDecimal,
-                                date: Option[DateTime],
-                                destinationId: String,
-                                destinationName: String,
-                                id: Int,
-                                sourceId: String,
-                                sourceName: String,
-                                `type`: String,
-                                userType: String,
-                                status: String,
-                                clearingDate: Option[DateTime],
-                                notes: String,
-                                fees: Option[Seq[FeeDetails]])
+  case class TransactionDetails(amount: BigDecimal, date: Option[DateTime], destinationId: String,
+                                destinationName: String, id: Int, sourceId: String, sourceName: String,
+                                `type`: String, userType: String, status: String, clearingDate: Option[DateTime],
+                                notes: String, fees: Option[Seq[FeeDetails]])
 
-  case class FullAccountInformation(city: String,
-                                    id: String,
-                                    latitude: BigDecimal,
-                                    longitude: BigDecimal,
-                                    name: String,
-                                    state: String,
-                                    `type`: String)
+  case class FullAccountInformation(city: String, id: String, latitude: BigDecimal, longitude: BigDecimal,
+                                    name: String, state: String, `type`: String)
 
-  case class BasicAccountInformation(id: String,
-                                     latitude: BigDecimal,
-                                     longitude: BigDecimal,
-                                     name: String)
+  case class BasicAccountInformation(id: String, latitude: BigDecimal, longitude: BigDecimal, name: String)
 
-  case class NearbyDetails(id: String,
-                           latitude: BigDecimal,
-                           name: String,
-                           longitude: BigDecimal,
-                           delta: BigDecimal,
+  case class NearbyDetails(id: String, latitude: BigDecimal, name: String, longitude: BigDecimal, delta: BigDecimal,
                            image: String)
+
+  case class RefundResponse(transactionId: Int, refundDate: Option[DateTime], amount: BigDecimal)
 
   implicit object JodaDateTimeFormat extends RootJsonFormat[Option[DateTime]] {
     def dateTimeFormatter = DateTimeFormat.forPattern("MM/dd/yyyy HH:mm:ss")
@@ -73,4 +54,6 @@ private[sdk] object DwollaSdkResponseJsonProtocol extends CapitalizedJsonProtoco
   implicit def basicAccountInformationFormat = jsonFormat4(BasicAccountInformation)
 
   implicit def nearbyDetailsFormat = jsonFormat6(NearbyDetails)
+
+  implicit def refundResponseFormat = jsonFormat3(RefundResponse)
 }

@@ -4,13 +4,11 @@ import scala.concurrent.Future
 import dwolla.sdk.DwollaSdkResponseJsonProtocol._
 
 private[sdk] case class FacilitatorFee(destinationId: String,
-                          amount: BigDecimal)
+                                       amount: BigDecimal)
 
 private[sdk] trait DwollaSdk {
 
   def getTransactionDetails(accessToken: String, transactionId: Int): Future[TransactionDetails]
-
-  def getAllTransactions(accessToken: String): Future[Seq[TransactionDetails]]
 
   def send(accessToken: String, pin: String, destinationId: String, amount: BigDecimal,
            destinationType: Option[String] = None,
@@ -18,6 +16,12 @@ private[sdk] trait DwollaSdk {
            notes: Option[String] = None,
            additionalFees: Option[Seq[FacilitatorFee]] = None, assumeAdditionalFees: Option[Boolean] = None):
   Future[Int]
+
+  def getAllTransactions(accessToken: String): Future[Seq[TransactionDetails]]
+
+
+  def refund(accessToken: String, pin: String, transactionId: Int, fundsSource: Int, amount: BigDecimal,
+             notes: Option[String]): Future[RefundResponse]
 
   def getBalance(accessToken: String): Future[BigDecimal]
 
