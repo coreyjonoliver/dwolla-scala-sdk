@@ -10,18 +10,25 @@ private[sdk] trait DwollaSdk {
 
   def getTransactionDetails(accessToken: String, transactionId: Int): Future[TransactionDetails]
 
-  def send(accessToken: String, pin: String, destinationId: String, amount: BigDecimal,
-           destinationType: Option[String] = None,
-           facilitatorAmount: Option[BigDecimal] = None, assumeCosts: Option[Boolean] = None,
-           notes: Option[String] = None,
-           additionalFees: Option[Seq[FacilitatorFee]] = None, assumeAdditionalFees: Option[Boolean] = None):
-  Future[Int]
+  def sendAsGuest(clientId: String, clientSecret: String, destinationId: String, amount: BigDecimal,
+                  firstName: String, lastName: String, emailAddress: String, routingNumber: String,
+                  accountNumber: String, accountType: String, assumeCosts: Option[Boolean] = None,
+                  destinationType: Option[String] = None, notes: Option[String] = None, groupId: Option[Int],
+                  additionalFees: Option[Seq[FacilitatorFee]] = None, facilitatorAmount: Option[BigDecimal] = None,
+                  assumeAdditionalFees: Option[Boolean] = None)
 
   def getAllTransactions(accessToken: String): Future[Seq[TransactionDetails]]
 
 
   def refund(accessToken: String, pin: String, transactionId: Int, fundsSource: Int, amount: BigDecimal,
              notes: Option[String]): Future[RefundResponse]
+
+  def send(accessToken: String, pin: String, destinationId: String, amount: BigDecimal,
+           destinationType: Option[String] = None,
+           facilitatorAmount: Option[BigDecimal] = None, assumeCosts: Option[Boolean] = None,
+           notes: Option[String] = None,
+           additionalFees: Option[Seq[FacilitatorFee]] = None, assumeAdditionalFees: Option[Boolean] = None):
+  Future[Int]
 
   def getBalance(accessToken: String): Future[BigDecimal]
 

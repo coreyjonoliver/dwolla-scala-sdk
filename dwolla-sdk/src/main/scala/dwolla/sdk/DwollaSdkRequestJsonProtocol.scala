@@ -8,9 +8,19 @@ private[sdk] object DwollaSdkRequestJsonProtocol extends DefaultJsonProtocol {
 
   override protected def extractFieldNames(classTag: ClassTag[_]) = {
     super.extractFieldNames(classTag).map {
-      name => if (name == "accessToken") "oauth_token" else name
+      case "accessToken" => "oauth_token"
+      case "clientId" => "client_id"
+      case "clientSecret" => "client_secret"
+      case n => n
     }
   }
+
+  case class SendAsGuestRequest(clientId: String, clientSecret: String, destinationId: String, amount: BigDecimal,
+    firstName: String, lastName: String, emailAddress: String, routingNumber: String,
+    accountNumber: String, accountType: String, assumeCosts: Option[Boolean] = None,
+  destinationType: Option[String] = None, notes: Option[String] = None, groupId: Option[Int],
+  additionalFees: Option[Seq[FacilitatorFee]] = None, facilitatorAmount: Option[BigDecimal] = None,
+  assumeAdditionalFees: Option[Boolean] = None)
 
   case class SendRequest(accessToken: String, pin: String, destinationId: String, amount: BigDecimal,
                          destinationType: Option[String] = None,
@@ -23,6 +33,8 @@ private[sdk] object DwollaSdkRequestJsonProtocol extends DefaultJsonProtocol {
                            amount: BigDecimal, notes: Option[String])
 
   implicit val facilitatorFeeFormat = jsonFormat2(FacilitatorFee)
+
+  implicit val sendAsGuestRequestFormat = jsonFormat17(SendAsGuestRequest)
 
   implicit val sendRequestFormat = jsonFormat10(SendRequest)
 
