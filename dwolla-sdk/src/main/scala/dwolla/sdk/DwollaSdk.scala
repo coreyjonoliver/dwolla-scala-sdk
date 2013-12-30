@@ -21,7 +21,7 @@ private[sdk] trait DwollaSdk {
 
 
   def refund(accessToken: String, pin: String, transactionId: Int, fundsSource: Int, amount: BigDecimal,
-             notes: Option[String]): Future[RefundResponse]
+             notes: Option[String]): Future[Refund]
 
   def send(accessToken: String, pin: String, destinationId: String, amount: BigDecimal,
            destinationType: Option[String] = None,

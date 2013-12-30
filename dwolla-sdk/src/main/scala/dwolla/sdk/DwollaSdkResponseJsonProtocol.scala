@@ -22,7 +22,7 @@ private[sdk] object DwollaSdkResponseJsonProtocol extends CapitalizedJsonProtoco
   case class NearbyDetails(id: String, latitude: BigDecimal, name: String, longitude: BigDecimal, delta: BigDecimal,
                            image: String)
 
-  case class RefundResponse(transactionId: Int, refundDate: Option[DateTime], amount: BigDecimal)
+  case class Refund(transactionId: Int, refundDate: Option[DateTime], amount: BigDecimal)
 
   implicit object JodaDateTimeFormat extends RootJsonFormat[Option[DateTime]] {
     def dateTimeFormatter = DateTimeFormat.forPattern("MM/dd/yyyy HH:mm:ss")
@@ -55,5 +55,5 @@ private[sdk] object DwollaSdkResponseJsonProtocol extends CapitalizedJsonProtoco
 
   implicit def nearbyDetailsFormat = jsonFormat6(NearbyDetails)
 
-  implicit def refundResponseFormat = jsonFormat3(RefundResponse)
+  implicit def refundFormat = jsonFormat3(Refund)
 }

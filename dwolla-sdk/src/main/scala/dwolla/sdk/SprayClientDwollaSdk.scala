@@ -67,10 +67,10 @@ class SprayClientDwollaSdk(settings: Option[HostConnectorSettings] = None)(
   }
 
   def refund(accessToken: String, pin: String, transactionId: Int, fundsSource: Int, amount: BigDecimal,
-             notes: Option[String] = None): Future[RefundResponse] = {
+             notes: Option[String] = None): Future[Refund] = {
     val uri = Uri("/oauth/rest/transactions/refund")
     val raw = RefundRequest(accessToken, pin, transactionId, fundsSource, amount, notes)
-    executeTo(Post(uri, raw), mapResponse[RefundResponse])
+    executeTo(Post(uri, raw), mapResponse[Refund])
   }
 
   def send(accessToken: String, pin: String, destinationId: String, amount: BigDecimal,
