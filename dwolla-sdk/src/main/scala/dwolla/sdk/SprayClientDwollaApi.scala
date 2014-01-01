@@ -43,9 +43,9 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
     }
   }
 
-  def getTransactionDetails(accessToken: String, transactionId: Int): Future[TransactionDetails] = {
+  def getTransactionById(accessToken: String, transactionId: Int): Future[TransactionByIdResponse] = {
     val uri = Uri(s"/oauth/rest/transactions/$transactionId").withQuery(Map("oauth_token" -> accessToken))
-    executeTo(Get(uri), mapResponse[TransactionDetails])
+    executeTo(Get(uri), mapResponse[TransactionByIdResponse])
   }
 
   def sendAsGuest(clientId: String, clientSecret: String, destinationId: String, amount: BigDecimal,
@@ -61,9 +61,9 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
     executeTo(Post(uri, raw), mapResponse[Int])
   }
 
-  def getAllTransactions(accessToken: String) = {
+  def getTransactionListing(accessToken: String) = {
     val uri = Uri(s"/oauth/rest/transactions/").withQuery(Map("oauth_token" -> accessToken))
-    executeTo(Get(uri), mapResponse[Seq[TransactionDetails]])
+    executeTo(Get(uri), mapResponse[TransactionListingResponse])
   }
 
   def refund(accessToken: String, pin: String, transactionId: Int, fundsSource: Int, amount: BigDecimal,
@@ -73,12 +73,12 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
     executeTo(Post(uri, raw), mapResponse[Refund])
   }
 
-  def send(accessToken: String, pin: String, destinationId: String, amount: BigDecimal,
-           destinationType: Option[String] = None,
-           facilitatorAmount: Option[BigDecimal] = None, assumeCosts: Option[Boolean] = None,
-           notes: Option[String] = None,
-           additionalFees: Option[Seq[FacilitatorFee]] = None, assumeAdditionalFees: Option[Boolean] = None):
-  Future[Int] = {
+  def transactionSend(accessToken: String, pin: String, destinationId: String, amount: BigDecimal,
+                      destinationType: Option[String] = None,
+                      facilitatorAmount: Option[BigDecimal] = None, assumeCosts: Option[Boolean] = None,
+                      notes: Option[String] = None,
+                      additionalFees: Option[Seq[FacilitatorFee]] = None, assumeAdditionalFees: Option[Boolean] = None):
+  Future[TransactionSendResponse] = {
     val uri = Uri("/oauth/rest/transactions/send")
     val raw = SendRequest(accessToken, pin, destinationId, amount, destinationType, facilitatorAmount, assumeCosts,
       notes, additionalFees, assumeAdditionalFees)

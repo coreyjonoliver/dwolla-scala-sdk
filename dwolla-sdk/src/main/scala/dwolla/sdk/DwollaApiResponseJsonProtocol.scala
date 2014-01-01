@@ -9,10 +9,14 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
 
   case class FeeDetails(id: Int, amount: BigDecimal, `type`: String)
 
-  case class TransactionDetails(amount: BigDecimal, date: Option[DateTime], destinationId: String,
+  type TransactionSendResponse = Int
+
+  case class TransactionByIdResponse(amount: BigDecimal, date: Option[DateTime], destinationId: String,
                                 destinationName: String, id: Int, sourceId: String, sourceName: String,
                                 `type`: String, userType: String, status: String, clearingDate: Option[DateTime],
                                 notes: String, fees: Option[Seq[FeeDetails]])
+
+  type TransactionListingResponse = Seq[TransactionByIdResponse]
 
   case class FullAccountInformation(city: String, id: String, latitude: BigDecimal, longitude: BigDecimal,
                                     name: String, state: String, `type`: String)
@@ -47,7 +51,7 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
 
   implicit def feeDetailsFormat = jsonFormat3(FeeDetails)
 
-  implicit def transactionDetailsFormat = jsonFormat13(TransactionDetails)
+  implicit def transactionDetailsFormat = jsonFormat13(TransactionByIdResponse)
 
   implicit def fullAccountInformationFormat = jsonFormat7(FullAccountInformation)
 
