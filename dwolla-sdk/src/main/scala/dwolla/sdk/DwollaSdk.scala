@@ -31,13 +31,18 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
       for {
         id <- dwollaApi.send(accessToken, pin, destinationId, amount, destinationType, facilitatorAmount,
           assumeCosts, notes, additionalFees, assumeAdditionalFees)
+        transaction <- retrieve(accessToken, id)
+      } yield transaction
+    }
+
+    def retrieve(accessToken: String, id: Int): Future[Transaction] = {
+      for {
         transactionDetails <- dwollaApi.getTransactionDetails(accessToken, id)
         fees = transactionDetails.fees.getOrElse(List()).map(f => FeeDetails(f.id, f.amount, f.`type`))
-      } yield (Transaction(transactionDetails.amount, transactionDetails.date, transactionDetails.destinationId,
+      } yield Transaction(transactionDetails.amount, transactionDetails.date, transactionDetails.destinationId,
         transactionDetails.destinationName, transactionDetails.id, transactionDetails.sourceId,
         transactionDetails.sourceName, transactionDetails.`type`, transactionDetails.userType,
-        transactionDetails.status, transactionDetails.clearingDate, transactionDetails.notes, fees))
+        transactionDetails.status, transactionDetails.clearingDate, transactionDetails.notes, fees)
     }
   }
-
 }

@@ -1,7 +1,6 @@
 package dwolla.sdk.examples
 
 import scala.concurrent.{Await, ExecutionContext}
-import dwolla.sdk.SprayClientDwollaApi
 import dwolla.sdk.DwollaSdk
 import akka.util.Timeout
 import scala.concurrent.duration._
@@ -24,10 +23,13 @@ object Main extends App {
   val dwollaSdk = new DwollaSdk()
 
   val createTransactionFuture = dwollaSdk.Transaction.create(accessToken, pin, "812-713-9234", .01)
+  val retrieveTransactionFuture = dwollaSdk.Transaction.retrieve(accessToken, 3983417)
 
   val createTransactionResult = Await.result(createTransactionFuture, timeout.duration)
+  val retrieveTransactionResult = Await.result(retrieveTransactionFuture, timeout.duration)
 
   println(createTransactionResult)
+  println(retrieveTransactionResult)
 
   shutdown()
 
