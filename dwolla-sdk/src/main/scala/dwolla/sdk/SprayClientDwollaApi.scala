@@ -43,9 +43,9 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
     }
   }
 
-  def getTransactionById(accessToken: String, transactionId: Int): Future[TransactionByIdResponse] = {
+  def getTransactionDetails(accessToken: String, transactionId: Int): Future[GetTransactionDetailsResponse] = {
     val uri = Uri(s"/oauth/rest/transactions/$transactionId").withQuery(Map("oauth_token" -> accessToken))
-    executeTo(Get(uri), mapResponse[TransactionByIdResponse])
+    executeTo(Get(uri), mapResponse[GetTransactionDetailsResponse])
   }
 
   def sendAsGuest(clientId: String, clientSecret: String, destinationId: String, amount: BigDecimal,
@@ -61,9 +61,9 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
     executeTo(Post(uri, raw), mapResponse[Int])
   }
 
-  def getTransactionListing(accessToken: String) = {
+  def listAllTransactions(accessToken: String) = {
     val uri = Uri(s"/oauth/rest/transactions/").withQuery(Map("oauth_token" -> accessToken))
-    executeTo(Get(uri), mapResponse[TransactionListingResponse])
+    executeTo(Get(uri), mapResponse[ListAllTransactionsResponse])
   }
 
   def refund(accessToken: String, pin: String, transactionId: Int, fundsSource: Int, amount: BigDecimal,
@@ -73,21 +73,21 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
     executeTo(Post(uri, raw), mapResponse[Refund])
   }
 
-  def transactionSend(accessToken: String, pin: String, destinationId: String, amount: BigDecimal,
+  def sendMoney(accessToken: String, pin: String, destinationId: String, amount: BigDecimal,
                       destinationType: Option[String] = None,
                       facilitatorAmount: Option[BigDecimal] = None, assumeCosts: Option[Boolean] = None,
                       notes: Option[String] = None,
                       additionalFees: Option[Seq[FacilitatorFee]] = None, assumeAdditionalFees: Option[Boolean] = None):
-  Future[TransactionSendResponse] = {
+  Future[SendMoneyResponse] = {
     val uri = Uri("/oauth/rest/transactions/send")
     val raw = SendRequest(accessToken, pin, destinationId, amount, destinationType, facilitatorAmount, assumeCosts,
       notes, additionalFees, assumeAdditionalFees)
-    executeTo(Post(uri, raw), mapResponse[Int])
+    executeTo(Post(uri, raw), mapResponse[SendMoneyResponse])
   }
 
-  def getBalance(accessToken: String): Future[BigDecimal] = {
+  def getBalance(accessToken: String): Future[BalanceResponse] = {
     val uri = Uri("/oauth/rest/balance/").withQuery(Map("oauth_token" -> accessToken))
-    executeTo(Get(uri), mapResponse[BigDecimal])
+    executeTo(Get(uri), mapResponse[BalanceResponse])
   }
 
   def getFullAccountInformation(accessToken: String): Future[FullAccountInformation] = {

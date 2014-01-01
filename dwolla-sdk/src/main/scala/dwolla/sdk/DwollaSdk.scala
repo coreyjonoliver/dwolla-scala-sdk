@@ -6,7 +6,8 @@ import akka.actor.ActorSystem
 import akka.util.Timeout
 import scala.concurrent.ExecutionContext
 import com.github.nscala_time.time.Imports._
-import dwolla.sdk.DwollaApiResponseJsonProtocol.{TransactionListingResponse, TransactionByIdResponse}
+import dwolla.sdk.DwollaApiResponseJsonProtocol.{ListAllTransactionsResponse,
+GetTransactionDetailsResponse}
 import scala.language.implicitConversions
 
 class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
@@ -17,17 +18,22 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
   private val dwollaApi = new SprayClientDwollaApi(settings)
 
   object Mappings {
-    implicit def transactionByIdResponse2Transaction(transactionByIdResponse: TransactionByIdResponse): Transaction = {
-      val fees = transactionByIdResponse.fees.getOrElse(List()).map(f => Fee(f.id, f.amount, f.`type`))
-      Transaction(transactionByIdResponse.amount, transactionByIdResponse.date, transactionByIdResponse.destinationId,
-        transactionByIdResponse.destinationName, transactionByIdResponse.id, transactionByIdResponse.sourceId,
-        transactionByIdResponse.sourceName, transactionByIdResponse.`type`, transactionByIdResponse.userType,
-        transactionByIdResponse.status, transactionByIdResponse.clearingDate, transactionByIdResponse.notes, fees)
+    implicit def getTransactionDetailsResponse2Transaction(getTransactionDetailsResponse: 
+                                                           GetTransactionDetailsResponse): Transaction = {
+      val fees = getTransactionDetailsResponse.fees.getOrElse(List()).map(f => Fee(f.id, f.amount, f.`type`))
+      Transaction(getTransactionDetailsResponse.amount, getTransactionDetailsResponse.date, 
+        getTransactionDetailsResponse.destinationId,
+        getTransactionDetailsResponse.destinationName, getTransactionDetailsResponse.id, 
+        getTransactionDetailsResponse.sourceId,
+        getTransactionDetailsResponse.sourceName, getTransactionDetailsResponse.`type`, 
+        getTransactionDetailsResponse.userType,
+        getTransactionDetailsResponse.status, getTransactionDetailsResponse.clearingDate, 
+        getTransactionDetailsResponse.notes, fees)
     }
 
-    implicit def transactionListingResponse2TransactionSeq(transactionListingResponse: TransactionListingResponse):
+    implicit def listAllTransactionsResponse2TransactionSeq(ListAllTransactionsResponse: ListAllTransactionsResponse):
     Seq[Transaction] = {
-      transactionListingResponse.map(transactionByIdResponse2Transaction)
+      ListAllTransactionsResponse.map(getTransactionDetailsResponse2Transaction)
     }
   }
 
@@ -49,7 +55,8 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
                additionalFees: Option[Seq[FacilitatorFee]] = None, assumeAdditionalFees: Option[Boolean] = None):
     Future[Transaction] = {
       for {
-        transactionSendResponse <- dwollaApi.transactionSend(accessToken, pin, destinationId, amount, destinationType, facilitatorAmount,
+        transactionSendResponse <- dwollaApi.sendMoney(accessToken, pin, destinationId, amount, destinationType, 
+          facilitatorAmount,
           assumeCosts, notes, additionalFees, assumeAdditionalFees)
         transactionFuture <- retrieve(accessToken, transactionSendResponse)
       } yield transactionFuture
@@ -57,14 +64,25 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
 
     def retrieve(accessToken: String, id: Int): Future[Transaction] = {
       for {
-        transactionByIdResponse <- dwollaApi.getTransactionById(accessToken, id)
+        transactionByIdResponse <- dwollaApi.getTransactionDetails(accessToken, id)
       } yield transactionByIdResponse
     }
 
     def all(accessToken: String): Future[Seq[Transaction]] = {
       for {
-        transactionListingResponse <- dwollaApi.getTransactionListing(accessToken)
+        transactionListingResponse <- dwollaApi.listAllTransactions(accessToken)
       } yield transactionListingResponse
     }
   }
+
+  type Balance = BigDecimal
+
+  object Balance {
+    def retrieve(accessToken: String): Future[Balance] = {
+      for {
+        balanceResponse <- dwollaApi.getBalance(accessToken)
+      } yield balanceResponse
+    }
+  }
+
 }
