@@ -43,12 +43,12 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
     }
   }
 
-  def getTransactionDetails(accessToken: String, transactionId: Int): Future[GetTransactionDetailsResponse] = {
+  def getTransactionDetails(accessToken: String, transactionId: Int) = {
     val uri = Uri(s"/oauth/rest/transactions/$transactionId").withQuery(Map("oauth_token" -> accessToken))
     executeTo(Get(uri), mapResponse[GetTransactionDetailsResponse])
   }
 
-  def sendAsGuest(clientId: String, clientSecret: String, destinationId: String, amount: BigDecimal,
+  def sendMoneyAsGuest(clientId: String, clientSecret: String, destinationId: String, amount: BigDecimal,
                   firstName: String, lastName: String, emailAddress: String, routingNumber: String,
                   accountNumber: String, accountType: String, assumeCosts: Option[Boolean] = None,
                   destinationType: Option[String] = None, notes: Option[String] = None, groupId: Option[Int],
@@ -58,7 +58,7 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
     val raw = SendAsGuestRequest(clientId, clientSecret, destinationId, amount, firstName, lastName, emailAddress,
       routingNumber, accountNumber, accountType, assumeCosts, destinationType, notes, groupId, additionalFees,
       facilitatorAmount, assumeAdditionalFees)
-    executeTo(Post(uri, raw), mapResponse[Int])
+    executeTo(Post(uri, raw), mapResponse[SendMoneyAsGuestResponse])
   }
 
   def listAllTransactions(accessToken: String) = {
@@ -66,11 +66,11 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
     executeTo(Get(uri), mapResponse[ListAllTransactionsResponse])
   }
 
-  def refund(accessToken: String, pin: String, transactionId: Int, fundsSource: Int, amount: BigDecimal,
-             notes: Option[String] = None): Future[Refund] = {
+  def issueRefund(accessToken: String, pin: String, transactionId: Int, fundsSource: Int, amount: BigDecimal,
+             notes: Option[String] = None) = {
     val uri = Uri("/oauth/rest/transactions/refund")
     val raw = RefundRequest(accessToken, pin, transactionId, fundsSource, amount, notes)
-    executeTo(Post(uri, raw), mapResponse[Refund])
+    executeTo(Post(uri, raw), mapResponse[IssueRefundResponse])
   }
 
   def sendMoney(accessToken: String, pin: String, destinationId: String, amount: BigDecimal,

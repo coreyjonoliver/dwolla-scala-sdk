@@ -9,6 +9,8 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
 
   case class FeeDetails(id: Int, amount: BigDecimal, `type`: String)
 
+  type SendMoneyAsGuestResponse = Int
+
   type SendMoneyResponse = Int
 
   case class GetTransactionDetailsResponse(amount: BigDecimal, date: Option[DateTime], destinationId: String,
@@ -28,7 +30,7 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
   case class NearbyDetails(id: String, latitude: BigDecimal, name: String, longitude: BigDecimal, delta: BigDecimal,
                            image: String)
 
-  case class Refund(transactionId: Int, refundDate: Option[DateTime], amount: BigDecimal)
+  case class IssueRefundResponse(transactionId: Int, refundDate: Option[DateTime], amount: BigDecimal)
 
   implicit object JodaDateTimeFormat extends RootJsonFormat[Option[DateTime]] {
     def dateTimeFormatter = DateTimeFormat.forPattern("MM/dd/yyyy HH:mm:ss")
@@ -61,5 +63,5 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
 
   implicit def nearbyDetailsFormat = jsonFormat6(NearbyDetails)
 
-  implicit def refundFormat = jsonFormat3(Refund)
+  implicit def refundFormat = jsonFormat3(IssueRefundResponse)
 }

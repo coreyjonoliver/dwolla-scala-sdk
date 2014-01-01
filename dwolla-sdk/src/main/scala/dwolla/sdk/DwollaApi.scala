@@ -10,7 +10,7 @@ private[sdk] trait DwollaApi {
 
   def getTransactionDetails(accessToken: String, transactionId: Int): Future[GetTransactionDetailsResponse]
 
-  def sendAsGuest(clientId: String, clientSecret: String, destinationId: String, amount: BigDecimal,
+  def sendMoneyAsGuest(clientId: String, clientSecret: String, destinationId: String, amount: BigDecimal,
                   firstName: String, lastName: String, emailAddress: String, routingNumber: String,
                   accountNumber: String, accountType: String, assumeCosts: Option[Boolean] = None,
                   destinationType: Option[String] = None, notes: Option[String] = None, groupId: Option[Int],
@@ -20,8 +20,8 @@ private[sdk] trait DwollaApi {
   def listAllTransactions(accessToken: String): Future[Seq[GetTransactionDetailsResponse]]
 
 
-  def refund(accessToken: String, pin: String, transactionId: Int, fundsSource: Int, amount: BigDecimal,
-             notes: Option[String]): Future[Refund]
+  def issueRefund(accessToken: String, pin: String, transactionId: Int, fundsSource: Int, amount: BigDecimal,
+             notes: Option[String]): Future[IssueRefundResponse]
 
   def sendMoney(accessToken: String, pin: String, destinationId: String, amount: BigDecimal,
            destinationType: Option[String] = None,
