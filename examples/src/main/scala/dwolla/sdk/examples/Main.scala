@@ -24,12 +24,15 @@ object Main extends App {
 
   val createTransactionFuture = dwollaSdk.Transaction.create(accessToken, pin, "812-713-9234", .01)
   val retrieveTransactionFuture = dwollaSdk.Transaction.retrieve(accessToken, 3983417)
+  val allTransactionFuture = dwollaSdk.Transaction.all(accessToken)
 
   val createTransactionResult = Await.result(createTransactionFuture, timeout.duration)
   val retrieveTransactionResult = Await.result(retrieveTransactionFuture, timeout.duration)
+  val allTransactionResult = Await.result(allTransactionFuture, timeout.duration)
 
   println(createTransactionResult)
   println(retrieveTransactionResult)
+  println(allTransactionResult)
 
   shutdown()
 
