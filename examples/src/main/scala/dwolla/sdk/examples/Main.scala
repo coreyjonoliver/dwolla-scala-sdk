@@ -2,6 +2,7 @@ package dwolla.sdk.examples
 
 import scala.concurrent.{Await, ExecutionContext}
 import dwolla.sdk.SprayClientDwollaApi
+import dwolla.sdk.DwollaSdk
 import akka.util.Timeout
 import scala.concurrent.duration._
 import akka.actor.ActorSystem
@@ -20,31 +21,13 @@ object Main extends App {
   val accessToken = sys.env("DWOLLA_ACCESS_TOKEN")
   val pin = sys.env("DWOLLA_PIN")
 
-  val dwollaClient = new SprayClientDwollaApi()
+  val dwollaSdk = new DwollaSdk()
 
-  val transactionDetailsFuture = dwollaClient.getTransactionDetails(accessToken, 3983417)
-  val allTransactionsFuture = dwollaClient.getAllTransactions(accessToken)
-  val sendFuture = dwollaClient.send(accessToken, pin, "812-713-9234", .01)
-  val balanceFuture = dwollaClient.getBalance(accessToken)
-  val fullAccountInfoFuture = dwollaClient.getFullAccountInformation(accessToken)
-  val basicAccountInfoFuture = dwollaClient.getBasicAccountInformation(clientId, clientSecret, "812-713-9234")
-  val nearbyFuture = dwollaClient.getNearby(clientId, clientSecret, 40, -74)
+  val createTransactionFuture = dwollaSdk.Transaction.create(accessToken, pin, "812-713-9234", .01)
 
-  val transactionDetailsResult = Await.result(transactionDetailsFuture, timeout.duration)
-  val allTransactionsResult = Await.result(allTransactionsFuture, timeout.duration)
-  val sendResult = Await.result(sendFuture, timeout.duration)
-  val balanceResult = Await.result(balanceFuture, timeout.duration)
-  val fullAccountInfoResult = Await.result(fullAccountInfoFuture, timeout.duration)
-  val basicAccountInfoResult = Await.result(basicAccountInfoFuture, timeout.duration)
-  val nearbyResult = Await.result(nearbyFuture, timeout.duration)
+  val createTransactionResult = Await.result(createTransactionFuture, timeout.duration)
 
-  println(transactionDetailsResult)
-  println(allTransactionsResult)
-  println(sendResult)
-  println(balanceResult)
-  println(fullAccountInfoResult)
-  println(basicAccountInfoResult)
-  println(nearbyResult)
+  println(createTransactionResult)
 
   shutdown()
 

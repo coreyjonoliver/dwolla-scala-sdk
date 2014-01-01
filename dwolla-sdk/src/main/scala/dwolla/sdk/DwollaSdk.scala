@@ -1,0 +1,43 @@
+package dwolla.sdk
+
+import scala.concurrent.Future
+import spray.can.client.HostConnectorSettings
+import akka.actor.ActorSystem
+import akka.util.Timeout
+import scala.concurrent.ExecutionContext
+import com.github.nscala_time.time.Imports._
+
+class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
+  implicit system: ActorSystem,
+  timeout: Timeout,
+  ec: ExecutionContext) {
+
+  private val dwollaApi = new SprayClientDwollaApi(settings)
+
+  case class FeeDetails(id: Int, amount: BigDecimal, `type`: String)
+
+  case class Transaction(amount: BigDecimal, date: Option[DateTime], destinationId: String,
+                         destinationName: String, id: Int, sourceId: String, sourceName: String,
+                         `type`: String, userType: String, status: String, clearingDate: Option[DateTime],
+                         notes: String, fees: Seq[FeeDetails])
+
+  object Transaction {
+    def create(accessToken: String, pin: String, destinationId: String, amount: BigDecimal,
+               destinationType: Option[String] = None,
+               facilitatorAmount: Option[BigDecimal] = None, assumeCosts: Option[Boolean] = None,
+               notes: Option[String] = None,
+               additionalFees: Option[Seq[FacilitatorFee]] = None, assumeAdditionalFees: Option[Boolean] = None):
+    Future[Transaction] = {
+      for {
+        id <- dwollaApi.send(accessToken, pin, destinationId, amount, destinationType, facilitatorAmount,
+          assumeCosts, notes, additionalFees, assumeAdditionalFees)
+        transactionDetails <- dwollaApi.getTransactionDetails(accessToken, id)
+        fees = transactionDetails.fees.getOrElse(List()).map(f => FeeDetails(f.id, f.amount, f.`type`))
+      } yield (Transaction(transactionDetails.amount, transactionDetails.date, transactionDetails.destinationId,
+        transactionDetails.destinationName, transactionDetails.id, transactionDetails.sourceId,
+        transactionDetails.sourceName, transactionDetails.`type`, transactionDetails.userType,
+        transactionDetails.status, transactionDetails.clearingDate, transactionDetails.notes, fees))
+    }
+  }
+
+}
