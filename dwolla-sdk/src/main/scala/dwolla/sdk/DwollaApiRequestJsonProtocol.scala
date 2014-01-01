@@ -2,7 +2,7 @@ package dwolla.sdk
 
 import spray.json.DefaultJsonProtocol
 
-private[sdk] object DwollaSdkRequestJsonProtocol extends DefaultJsonProtocol {
+private[sdk] object DwollaApiRequestJsonProtocol extends DefaultJsonProtocol {
 
   import reflect._
 

@@ -5,17 +5,17 @@ import akka.actor.ActorSystem
 import spray.client.pipelining._
 import akka.util.Timeout
 import spray.http._
-import DwollaSdkResponseJsonProtocol._
+import DwollaApiResponseJsonProtocol._
 import spray.json._
 import spray.can.client.HostConnectorSettings
 import spray.can.Http.HostConnectorSetup
 import spray.httpx.SprayJsonSupport._
-import dwolla.sdk.DwollaSdkRequestJsonProtocol.{SendAsGuestRequest, RefundRequest, SendRequest}
+import dwolla.sdk.DwollaApiRequestJsonProtocol.{SendAsGuestRequest, RefundRequest, SendRequest}
 
-class SprayClientDwollaSdk(settings: Option[HostConnectorSettings] = None)(
+class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
   implicit system: ActorSystem,
   timeout: Timeout,
-  ec: ExecutionContext) extends SprayHttpClient with DwollaSdk {
+  ec: ExecutionContext) extends SprayHttpClient with DwollaApi {
 
   private val setup = HostConnectorSetup(
     host = "www.dwolla.com",

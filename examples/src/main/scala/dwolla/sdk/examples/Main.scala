@@ -1,7 +1,7 @@
 package dwolla.sdk.examples
 
 import scala.concurrent.{Await, ExecutionContext}
-import dwolla.sdk.SprayClientDwollaSdk
+import dwolla.sdk.SprayClientDwollaApi
 import akka.util.Timeout
 import scala.concurrent.duration._
 import akka.actor.ActorSystem
@@ -20,7 +20,7 @@ object Main extends App {
   val accessToken = sys.env("DWOLLA_ACCESS_TOKEN")
   val pin = sys.env("DWOLLA_PIN")
 
-  val dwollaClient = new SprayClientDwollaSdk()
+  val dwollaClient = new SprayClientDwollaApi()
 
   val transactionDetailsFuture = dwollaClient.getTransactionDetails(accessToken, 3983417)
   val allTransactionsFuture = dwollaClient.getAllTransactions(accessToken)
