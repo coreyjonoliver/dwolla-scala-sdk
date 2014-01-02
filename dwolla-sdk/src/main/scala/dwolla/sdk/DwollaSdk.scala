@@ -36,7 +36,8 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
 
     implicit def listAllTransactionsResponse2TransactionSeq(response: ListAllTransactionsResponse):
     Seq[Transaction] = {
-      response.map(getTransactionDetailsResponse2Transaction)
+      val listAllTransactionsResponseElement2Transaction = getTransactionDetailsResponse2Transaction _
+      response.map(listAllTransactionsResponseElement2Transaction)
     }
 
     implicit def basicAccountInformationResponse2User(response: BasicAccountInformationResponse): User = {

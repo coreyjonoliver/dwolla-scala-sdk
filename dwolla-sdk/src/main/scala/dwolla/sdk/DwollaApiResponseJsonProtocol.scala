@@ -18,7 +18,9 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
                                 `type`: String, userType: String, status: String, clearingDate: Option[DateTime],
                                 notes: String, fees: Option[Seq[FeeDetails]])
 
-  type ListAllTransactionsResponse = Seq[GetTransactionDetailsResponse]
+  type ListAllTransactionsResponseElement = GetTransactionDetailsResponse
+  
+  type ListAllTransactionsResponse = Seq[ListAllTransactionsResponseElement]
 
   type BalanceResponse = BigDecimal
 
