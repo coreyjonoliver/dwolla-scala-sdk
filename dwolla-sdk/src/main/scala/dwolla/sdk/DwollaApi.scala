@@ -32,7 +32,7 @@ private[sdk] trait DwollaApi {
 
   def getBalance(accessToken: String): Future[BigDecimal]
 
-  def getFullAccountInformation(accessToken: String): Future[FullAccountInformation]
+  def getFullAccountInformation(accessToken: String): Future[FullAccountInformationResponse]
 
   def getBasicAccountInformation(clientId: String, clientSecret: String,
                                  accountIdentifier: String): Future[BasicAccountInformationResponse]

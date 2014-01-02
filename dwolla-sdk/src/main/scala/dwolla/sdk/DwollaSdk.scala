@@ -6,8 +6,8 @@ import akka.actor.ActorSystem
 import akka.util.Timeout
 import scala.concurrent.ExecutionContext
 import com.github.nscala_time.time.Imports._
-import dwolla.sdk.DwollaApiResponseJsonProtocol.{BasicAccountInformationResponse, ListAllTransactionsResponse,
-GetTransactionDetailsResponse}
+import dwolla.sdk.DwollaApiResponseJsonProtocol.{FullAccountInformationResponse, BasicAccountInformationResponse,
+ListAllTransactionsResponse, GetTransactionDetailsResponse}
 import scala.language.implicitConversions
 
 class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
@@ -37,7 +37,12 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
     }
 
     implicit def basicAccountInformationResponse2User(response: BasicAccountInformationResponse): User = {
-      User(response.id, response.latitude, response.longitude, response.name)
+      User(response.id, response.latitude, response.longitude, response.name, None, None, None)
+    }
+
+    implicit def fullAccountInformationResponse2User(response: FullAccountInformationResponse): User = {
+      User(response.id, response.latitude, response.longitude, response.name, Some(response.city),
+        Some(response.state), Some(response.`type`))
     }
   }
 
@@ -89,9 +94,20 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
     }
   }
 
-  case class User(id: String, latitude: BigDecimal, longitude: BigDecimal, name: String)
+  //  "Response": {
+  //    "City": "Des Moines",
+  //    "Id": "812-111-1111",
+  //    "Latitude": 41.584546,
+  //    "Longitude": -93.634167,
+  //    "Name": "Test User",
+  //    "State": "IA",
+  //    "Type": "Personal"
+  //  }
+  case class User(id: String, latitude: BigDecimal, longitude: BigDecimal, name: String, city: Option[String],
+                  state: Option[String], `type`: Option[String])
 
   object User {
+
     import Mappings._
 
     def retrieve(clientId: String, clientSecret: String, accountIdentifier: String): Future[User] = {
@@ -100,5 +116,12 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
           accountIdentifier)
       } yield basicAccountInformationResponse
     }
+
+    def retrieve(accessToken: String): Future[User] = {
+      for {
+        fullAccountInformationResponse <- dwollaApi.getFullAccountInformation(accessToken)
+      } yield fullAccountInformationResponse
+    }
   }
+
 }

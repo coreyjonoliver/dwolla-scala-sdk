@@ -90,9 +90,9 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
     executeTo(Get(uri), mapResponse[BalanceResponse])
   }
 
-  def getFullAccountInformation(accessToken: String): Future[FullAccountInformation] = {
+  def getFullAccountInformation(accessToken: String): Future[FullAccountInformationResponse] = {
     val uri = Uri("/oauth/rest/users/").withQuery(Map("oauth_token" -> accessToken))
-    executeTo(Get(uri), mapResponse[FullAccountInformation])
+    executeTo(Get(uri), mapResponse[FullAccountInformationResponse])
   }
 
   def getBasicAccountInformation(clientId: String, clientSecret: String,

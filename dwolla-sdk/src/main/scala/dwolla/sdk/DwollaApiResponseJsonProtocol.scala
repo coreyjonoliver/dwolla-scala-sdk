@@ -22,7 +22,7 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
 
   type BalanceResponse = BigDecimal
 
-  case class FullAccountInformation(city: String, id: String, latitude: BigDecimal, longitude: BigDecimal,
+  case class FullAccountInformationResponse(city: String, id: String, latitude: BigDecimal, longitude: BigDecimal,
                                     name: String, state: String, `type`: String)
 
   case class BasicAccountInformationResponse(id: String, latitude: BigDecimal, longitude: BigDecimal, name: String)
@@ -57,7 +57,7 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
 
   implicit def transactionDetailsFormat = jsonFormat13(GetTransactionDetailsResponse)
 
-  implicit def fullAccountInformationFormat = jsonFormat7(FullAccountInformation)
+  implicit def fullAccountInformationFormat = jsonFormat7(FullAccountInformationResponse)
 
   implicit def basicAccountInformationFormat = jsonFormat4(BasicAccountInformationResponse)
 

@@ -27,19 +27,21 @@ object Main extends App {
   val retrieveTransactionFuture = dwollaSdk.Transaction.retrieve(accessToken, 3983417)
   val allTransactionFuture = dwollaSdk.Transaction.all(accessToken)
   val retrieveUserFuture1 = dwollaSdk.User.retrieve(clientId, clientSecret, "812-713-9234")
-
+  val retrieveUserFuture2 = dwollaSdk.User.retrieve(accessToken)
 
   val retrieveBalanceResult = Await.result(retrieveBalanceFuture, timeout.duration)
   val createTransactionResult = Await.result(createTransactionFuture, timeout.duration)
   val retrieveTransactionResult = Await.result(retrieveTransactionFuture, timeout.duration)
   val allTransactionResult = Await.result(allTransactionFuture, timeout.duration)
   val retrieveUserResult1 = Await.result(retrieveUserFuture1, timeout.duration)
+  val retrieveUserResult2 = Await.result(retrieveUserFuture2, timeout.duration)
 
   println(retrieveBalanceResult)
   println(createTransactionResult)
   println(retrieveTransactionResult)
   println(allTransactionResult)
   println(retrieveUserResult1)
+  println(retrieveUserResult2)
 
   shutdown()
 
