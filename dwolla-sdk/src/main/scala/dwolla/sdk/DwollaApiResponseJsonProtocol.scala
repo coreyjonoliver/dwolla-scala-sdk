@@ -7,30 +7,32 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
 
   case class Response[T: JsonFormat](success: Boolean, message: String, response: Option[T])
 
-  case class FeeDetails(id: Int, amount: BigDecimal, `type`: String)
-
   type SendMoneyAsGuestResponse = Int
 
   type SendMoneyResponse = Int
 
+  case class GetTransactionDetailsResponseFee(id: Int, amount: BigDecimal, `type`: String)
+
   case class GetTransactionDetailsResponse(amount: BigDecimal, date: Option[DateTime], destinationId: String,
-                                destinationName: String, id: Int, sourceId: String, sourceName: String,
-                                `type`: String, userType: String, status: String, clearingDate: Option[DateTime],
-                                notes: String, fees: Option[Seq[FeeDetails]])
+                                           destinationName: String, id: Int, sourceId: String, sourceName: String,
+                                           `type`: String, userType: String, status: String,
+                                           clearingDate: Option[DateTime],
+                                           notes: String, fees: Option[Seq[GetTransactionDetailsResponseFee]])
 
   type ListAllTransactionsResponseElement = GetTransactionDetailsResponse
-  
+
   type ListAllTransactionsResponse = Seq[ListAllTransactionsResponseElement]
 
   type BalanceResponse = BigDecimal
 
   case class FullAccountInformationResponse(city: String, id: String, latitude: BigDecimal, longitude: BigDecimal,
-                                    name: String, state: String, `type`: String)
+                                            name: String, state: String, `type`: String)
 
   case class BasicAccountInformationResponse(id: String, latitude: BigDecimal, longitude: BigDecimal, name: String)
 
-  case class FindUsersNearbyResponseElement(id: String, latitude: BigDecimal, name: String, longitude: BigDecimal, delta: BigDecimal,
-                           image: String)
+  case class FindUsersNearbyResponseElement(id: String, latitude: BigDecimal, name: String, longitude: BigDecimal,
+                                            delta: BigDecimal,
+                                            image: String)
 
   type FindUsersNearbyResponse = Seq[FindUsersNearbyResponseElement]
 
@@ -57,15 +59,15 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
 
   implicit def responseFormat[T: JsonFormat] = jsonFormat3(Response.apply[T])
 
-  implicit def feeDetailsFormat = jsonFormat3(FeeDetails)
+  implicit def getTransactionDetailsResponseFeeFormat = jsonFormat3(GetTransactionDetailsResponseFee)
 
-  implicit def transactionDetailsFormat = jsonFormat13(GetTransactionDetailsResponse)
+  implicit def getTransactionDetailsResponseFormat = jsonFormat13(GetTransactionDetailsResponse)
 
-  implicit def fullAccountInformationFormat = jsonFormat7(FullAccountInformationResponse)
+  implicit def fullAccountInformationResponseFormat = jsonFormat7(FullAccountInformationResponse)
 
-  implicit def basicAccountInformationFormat = jsonFormat4(BasicAccountInformationResponse)
+  implicit def basicAccountInformationResponseFormat = jsonFormat4(BasicAccountInformationResponse)
 
-  implicit def nearbyDetailsFormat = jsonFormat6(FindUsersNearbyResponseElement)
+  implicit def findUsersNearbyResponseElementFormat = jsonFormat6(FindUsersNearbyResponseElement)
 
-  implicit def refundFormat = jsonFormat3(IssueRefundResponse)
+  implicit def issueRefundResponseFormat = jsonFormat3(IssueRefundResponse)
 }
