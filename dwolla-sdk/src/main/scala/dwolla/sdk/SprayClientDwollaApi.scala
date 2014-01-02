@@ -102,12 +102,12 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
     executeTo(Get(uriWithQuery), mapResponse[BasicAccountInformationResponse])
   }
 
-  def getNearby(clientId: String, clientSecret: String, latitude: BigDecimal,
-                longitude: BigDecimal): Future[Seq[NearbyDetails]] = {
+  def findUsersNearby(clientId: String, clientSecret: String, latitude: BigDecimal,
+                longitude: BigDecimal): Future[FindUsersNearbyResponse] = {
     val uri = Uri("/oauth/rest/users/nearby")
     val uriWithQuery = uri.withQuery(Map("client_id" -> clientId, "client_secret" -> clientSecret,
       "latitude" -> latitude.toString,
       "longitude" -> longitude.toString))
-    executeTo(Get(uriWithQuery), mapResponse[Seq[NearbyDetails]])
+    executeTo(Get(uriWithQuery), mapResponse[FindUsersNearbyResponse])
   }
 }

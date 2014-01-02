@@ -37,6 +37,6 @@ private[sdk] trait DwollaApi {
   def getBasicAccountInformation(clientId: String, clientSecret: String,
                                  accountIdentifier: String): Future[BasicAccountInformationResponse]
 
-  def getNearby(clientId: String, clientSecret: String, latitude: BigDecimal,
-                longitude: BigDecimal): Future[Seq[NearbyDetails]]
+  def findUsersNearby(clientId: String, clientSecret: String, latitude: BigDecimal,
+                longitude: BigDecimal): Future[FindUsersNearbyResponse]
 }

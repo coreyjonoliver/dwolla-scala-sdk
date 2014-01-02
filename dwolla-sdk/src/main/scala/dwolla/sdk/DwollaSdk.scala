@@ -6,9 +6,12 @@ import akka.actor.ActorSystem
 import akka.util.Timeout
 import scala.concurrent.ExecutionContext
 import com.github.nscala_time.time.Imports._
-import dwolla.sdk.DwollaApiResponseJsonProtocol.{FullAccountInformationResponse, BasicAccountInformationResponse,
-ListAllTransactionsResponse, GetTransactionDetailsResponse}
+import dwolla.sdk.DwollaApiResponseJsonProtocol._
 import scala.language.implicitConversions
+import scala.Some
+import dwolla.sdk.DwollaApiResponseJsonProtocol.FullAccountInformationResponse
+import dwolla.sdk.DwollaApiResponseJsonProtocol.GetTransactionDetailsResponse
+import dwolla.sdk.DwollaApiResponseJsonProtocol.BasicAccountInformationResponse
 
 class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
   implicit system: ActorSystem,
@@ -37,12 +40,16 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
     }
 
     implicit def basicAccountInformationResponse2User(response: BasicAccountInformationResponse): User = {
-      User(response.id, response.latitude, response.longitude, response.name, None, None, None)
+      User(response.id, response.latitude, response.longitude, response.name, None, None, None, None)
     }
 
     implicit def fullAccountInformationResponse2User(response: FullAccountInformationResponse): User = {
       User(response.id, response.latitude, response.longitude, response.name, Some(response.city),
-        Some(response.state), Some(response.`type`))
+        Some(response.state), Some(response.`type`), None)
+    }
+
+    implicit def findUsersNearbyResponse2UserSeq(response: FindUsersNearbyResponse): Seq[User] = {
+      response.map(x => User(x.id, x.latitude, x.longitude, x.name, None, None, None, Some(x.image)))
     }
   }
 
@@ -94,17 +101,8 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
     }
   }
 
-  //  "Response": {
-  //    "City": "Des Moines",
-  //    "Id": "812-111-1111",
-  //    "Latitude": 41.584546,
-  //    "Longitude": -93.634167,
-  //    "Name": "Test User",
-  //    "State": "IA",
-  //    "Type": "Personal"
-  //  }
   case class User(id: String, latitude: BigDecimal, longitude: BigDecimal, name: String, city: Option[String],
-                  state: Option[String], `type`: Option[String])
+                  state: Option[String], `type`: Option[String], image: Option[String])
 
   object User {
 
@@ -121,6 +119,13 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
       for {
         fullAccountInformationResponse <- dwollaApi.getFullAccountInformation(accessToken)
       } yield fullAccountInformationResponse
+    }
+
+    def nearby(clientId: String, clientSecret: String, latitude: BigDecimal,
+               longitude: BigDecimal): Future[Seq[User]] = {
+      for {
+        findUsersNearbyResponse <- dwollaApi.findUsersNearby(clientId, clientSecret, latitude, longitude)
+      } yield findUsersNearbyResponse
     }
   }
 

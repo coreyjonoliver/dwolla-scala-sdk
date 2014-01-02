@@ -27,8 +27,10 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
 
   case class BasicAccountInformationResponse(id: String, latitude: BigDecimal, longitude: BigDecimal, name: String)
 
-  case class NearbyDetails(id: String, latitude: BigDecimal, name: String, longitude: BigDecimal, delta: BigDecimal,
+  case class FindUsersNearbyResponseElement(id: String, latitude: BigDecimal, name: String, longitude: BigDecimal, delta: BigDecimal,
                            image: String)
+
+  type FindUsersNearbyResponse = Seq[FindUsersNearbyResponseElement]
 
   case class IssueRefundResponse(transactionId: Int, refundDate: Option[DateTime], amount: BigDecimal)
 
@@ -61,7 +63,7 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
 
   implicit def basicAccountInformationFormat = jsonFormat4(BasicAccountInformationResponse)
 
-  implicit def nearbyDetailsFormat = jsonFormat6(NearbyDetails)
+  implicit def nearbyDetailsFormat = jsonFormat6(FindUsersNearbyResponseElement)
 
   implicit def refundFormat = jsonFormat3(IssueRefundResponse)
 }
