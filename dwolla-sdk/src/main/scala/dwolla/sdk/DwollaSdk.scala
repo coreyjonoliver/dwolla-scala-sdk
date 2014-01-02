@@ -6,7 +6,7 @@ import akka.actor.ActorSystem
 import akka.util.Timeout
 import scala.concurrent.ExecutionContext
 import com.github.nscala_time.time.Imports._
-import dwolla.sdk.DwollaApiResponseJsonProtocol.{ListAllTransactionsResponse,
+import dwolla.sdk.DwollaApiResponseJsonProtocol.{BasicAccountInformationResponse, ListAllTransactionsResponse,
 GetTransactionDetailsResponse}
 import scala.language.implicitConversions
 
@@ -18,29 +18,33 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
   private val dwollaApi = new SprayClientDwollaApi(settings)
 
   object Mappings {
-    implicit def getTransactionDetailsResponse2Transaction(getTransactionDetailsResponse: 
+    implicit def getTransactionDetailsResponse2Transaction(response:
                                                            GetTransactionDetailsResponse): Transaction = {
-      val fees = getTransactionDetailsResponse.fees.getOrElse(List()).map(f => Fee(f.id, f.amount, f.`type`))
-      Transaction(getTransactionDetailsResponse.amount, getTransactionDetailsResponse.date, 
-        getTransactionDetailsResponse.destinationId,
-        getTransactionDetailsResponse.destinationName, getTransactionDetailsResponse.id, 
-        getTransactionDetailsResponse.sourceId,
-        getTransactionDetailsResponse.sourceName, getTransactionDetailsResponse.`type`, 
-        getTransactionDetailsResponse.userType,
-        getTransactionDetailsResponse.status, getTransactionDetailsResponse.clearingDate, 
-        getTransactionDetailsResponse.notes, fees)
+      val fees = response.fees.getOrElse(List()).map(f => Fee(f.id, f.amount, f.`type`))
+      Transaction(response.amount, response.date,
+        response.destinationId,
+        response.destinationName, response.id,
+        Some(response.sourceId),
+        Some(response.sourceName), response.`type`,
+        response.userType,
+        response.status, response.clearingDate,
+        response.notes, fees)
     }
 
-    implicit def listAllTransactionsResponse2TransactionSeq(ListAllTransactionsResponse: ListAllTransactionsResponse):
+    implicit def listAllTransactionsResponse2TransactionSeq(response: ListAllTransactionsResponse):
     Seq[Transaction] = {
-      ListAllTransactionsResponse.map(getTransactionDetailsResponse2Transaction)
+      response.map(getTransactionDetailsResponse2Transaction)
+    }
+
+    implicit def basicAccountInformationResponse2User(response: BasicAccountInformationResponse): User = {
+      User(response.id, response.latitude, response.longitude, response.name)
     }
   }
 
   case class Fee(id: Int, amount: BigDecimal, `type`: String)
 
   case class Transaction(amount: BigDecimal, date: Option[DateTime], destinationId: String,
-                         destinationName: String, id: Int, sourceId: String, sourceName: String,
+                         destinationName: String, id: Int, sourceId: Option[String], sourceName: Option[String],
                          `type`: String, userType: String, status: String, clearingDate: Option[DateTime],
                          notes: String, fees: Seq[Fee])
 
@@ -52,10 +56,10 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
                destinationType: Option[String] = None,
                facilitatorAmount: Option[BigDecimal] = None, assumeCosts: Option[Boolean] = None,
                notes: Option[String] = None,
-               additionalFees: Option[Seq[FacilitatorFee]] = None, assumeAdditionalFees: Option[Boolean] = None):
+               additionalFees: Seq[FacilitatorFee] = List(), assumeAdditionalFees: Option[Boolean] = None):
     Future[Transaction] = {
       for {
-        transactionSendResponse <- dwollaApi.sendMoney(accessToken, pin, destinationId, amount, destinationType, 
+        transactionSendResponse <- dwollaApi.sendMoney(accessToken, pin, destinationId, amount, destinationType,
           facilitatorAmount,
           assumeCosts, notes, additionalFees, assumeAdditionalFees)
         transactionFuture <- retrieve(accessToken, transactionSendResponse)
@@ -85,4 +89,16 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
     }
   }
 
+  case class User(id: String, latitude: BigDecimal, longitude: BigDecimal, name: String)
+
+  object User {
+    import Mappings._
+
+    def retrieve(clientId: String, clientSecret: String, accountIdentifier: String): Future[User] = {
+      for {
+        basicAccountInformationResponse <- dwollaApi.getBasicAccountInformation(clientId, clientSecret,
+          accountIdentifier)
+      } yield basicAccountInformationResponse
+    }
+  }
 }

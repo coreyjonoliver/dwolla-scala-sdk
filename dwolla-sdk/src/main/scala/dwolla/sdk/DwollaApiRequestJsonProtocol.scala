@@ -19,14 +19,14 @@ private[sdk] object DwollaApiRequestJsonProtocol extends DefaultJsonProtocol {
     firstName: String, lastName: String, emailAddress: String, routingNumber: String,
     accountNumber: String, accountType: String, assumeCosts: Option[Boolean] = None,
   destinationType: Option[String] = None, notes: Option[String] = None, groupId: Option[Int],
-  additionalFees: Option[Seq[FacilitatorFee]] = None, facilitatorAmount: Option[BigDecimal] = None,
+  additionalFees: Seq[FacilitatorFee] = List(), facilitatorAmount: Option[BigDecimal] = None,
   assumeAdditionalFees: Option[Boolean] = None)
 
   case class SendRequest(accessToken: String, pin: String, destinationId: String, amount: BigDecimal,
                          destinationType: Option[String] = None,
                          facilitatorAmount: Option[BigDecimal] = None, assumeCosts: Option[Boolean] = None,
                          notes: Option[String] = None,
-                         additionalFees: Option[Seq[FacilitatorFee]] = None, assumeAdditionalFees: Option[Boolean] =
+                         additionalFees: Seq[FacilitatorFee] = List(), assumeAdditionalFees: Option[Boolean] =
   None)
 
   case class RefundRequest(accessToken: String, pin: String, transactionId: Int, fundsSource: Int,

@@ -14,8 +14,8 @@ private[sdk] trait DwollaApi {
                   firstName: String, lastName: String, emailAddress: String, routingNumber: String,
                   accountNumber: String, accountType: String, assumeCosts: Option[Boolean] = None,
                   destinationType: Option[String] = None, notes: Option[String] = None, groupId: Option[Int],
-                  additionalFees: Option[Seq[FacilitatorFee]] = None, facilitatorAmount: Option[BigDecimal] = None,
-                  assumeAdditionalFees: Option[Boolean] = None)
+                  additionalFees: Seq[FacilitatorFee] = List(), facilitatorAmount: Option[BigDecimal] = None,
+                  assumeAdditionalFees: Option[Boolean] = None): Future[SendMoneyAsGuestResponse]
 
   def listAllTransactions(accessToken: String): Future[Seq[GetTransactionDetailsResponse]]
 
@@ -27,15 +27,15 @@ private[sdk] trait DwollaApi {
            destinationType: Option[String] = None,
            facilitatorAmount: Option[BigDecimal] = None, assumeCosts: Option[Boolean] = None,
            notes: Option[String] = None,
-           additionalFees: Option[Seq[FacilitatorFee]] = None, assumeAdditionalFees: Option[Boolean] = None):
-  Future[Int]
+           additionalFees: Seq[FacilitatorFee] = List(), assumeAdditionalFees: Option[Boolean] = None):
+  Future[SendMoneyResponse]
 
   def getBalance(accessToken: String): Future[BigDecimal]
 
   def getFullAccountInformation(accessToken: String): Future[FullAccountInformation]
 
   def getBasicAccountInformation(clientId: String, clientSecret: String,
-                                 accountIdentifier: String): Future[BasicAccountInformation]
+                                 accountIdentifier: String): Future[BasicAccountInformationResponse]
 
   def getNearby(clientId: String, clientSecret: String, latitude: BigDecimal,
                 longitude: BigDecimal): Future[Seq[NearbyDetails]]

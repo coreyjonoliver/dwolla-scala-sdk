@@ -52,7 +52,7 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
                   firstName: String, lastName: String, emailAddress: String, routingNumber: String,
                   accountNumber: String, accountType: String, assumeCosts: Option[Boolean] = None,
                   destinationType: Option[String] = None, notes: Option[String] = None, groupId: Option[Int],
-                  additionalFees: Option[Seq[FacilitatorFee]] = None, facilitatorAmount: Option[BigDecimal] = None,
+                  additionalFees: Seq[FacilitatorFee] = List(), facilitatorAmount: Option[BigDecimal] = None,
                   assumeAdditionalFees: Option[Boolean] = None) = {
     val uri = Uri("/oauth/rest/transactions/guestsend")
     val raw = SendAsGuestRequest(clientId, clientSecret, destinationId, amount, firstName, lastName, emailAddress,
@@ -77,7 +77,7 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
                       destinationType: Option[String] = None,
                       facilitatorAmount: Option[BigDecimal] = None, assumeCosts: Option[Boolean] = None,
                       notes: Option[String] = None,
-                      additionalFees: Option[Seq[FacilitatorFee]] = None, assumeAdditionalFees: Option[Boolean] = None):
+                      additionalFees: Seq[FacilitatorFee] = List(), assumeAdditionalFees: Option[Boolean] = None):
   Future[SendMoneyResponse] = {
     val uri = Uri("/oauth/rest/transactions/send")
     val raw = SendRequest(accessToken, pin, destinationId, amount, destinationType, facilitatorAmount, assumeCosts,
@@ -96,10 +96,10 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
   }
 
   def getBasicAccountInformation(clientId: String, clientSecret: String,
-                                 accountIdentifier: String): Future[BasicAccountInformation] = {
+                                 accountIdentifier: String): Future[BasicAccountInformationResponse] = {
     val uri = Uri(s"/oauth/rest/users/$accountIdentifier")
     val uriWithQuery = uri.withQuery(Map("client_id" -> clientId, "client_secret" -> clientSecret))
-    executeTo(Get(uriWithQuery), mapResponse[BasicAccountInformation])
+    executeTo(Get(uriWithQuery), mapResponse[BasicAccountInformationResponse])
   }
 
   def getNearby(clientId: String, clientSecret: String, latitude: BigDecimal,
