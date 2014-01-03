@@ -55,6 +55,11 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
     executeTo(Post(uri, raw), mapResponse[AddFundingSourceResponse])
   }
 
+  def getFundingSourceDetails(accessToken: String, fundingId: Int) = {
+    val uri = Uri(s"/fundingsources/$fundingId").withQuery(Map("oauth_token" -> accessToken))
+    executeTo(Get(uri), mapResponse[GetFundingSourceDetailsResponse])
+  }
+
   def getTransactionDetails(accessToken: String, transactionId: Int) = {
     val uri = Uri(s"/oauth/rest/transactions/$transactionId").withQuery(Map("oauth_token" -> accessToken))
     executeTo(Get(uri), mapResponse[GetTransactionDetailsResponse])

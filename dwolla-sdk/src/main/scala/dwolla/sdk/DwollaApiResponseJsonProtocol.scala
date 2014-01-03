@@ -10,6 +10,9 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
   case class AddFundingSourceResponse(id: String, name: String, `type`: String, verified: Boolean,
                                       processingType: String)
 
+  case class GetFundingSourceDetailsResponse(id: String, name: String, `type`: String, verified: Boolean,
+                                             processingType: String, balance: BigDecimal)
+
   type SendMoneyAsGuestResponse = Int
 
   type SendMoneyResponse = Int
@@ -63,6 +66,8 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
   implicit def responseFormat[T: JsonFormat] = jsonFormat3(Response.apply[T])
 
   implicit def addFundingSourceResponseFormat = jsonFormat5(AddFundingSourceResponse)
+
+  implicit def getFundingSourceDetailsResponseFormat = jsonFormat6(GetFundingSourceDetailsResponse)
 
   implicit def getTransactionDetailsResponseFeeFormat = jsonFormat3(GetTransactionDetailsResponseFee)
 

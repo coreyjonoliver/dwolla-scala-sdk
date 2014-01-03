@@ -34,7 +34,12 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
         response.notes, fees)
     }
 
-    implicit def addFundingSource2FundingSource(response: AddFundingSourceResponse): FundingSource = {
+    implicit def addFundingSourceResponse2FundingSource(response: AddFundingSourceResponse): FundingSource = {
+      FundingSource(response.id, response.name, response.`type`, response.verified, response.processingType)
+    }
+
+    implicit def getFundingSourceDetailsResponse2FundingSource(response: GetFundingSourceDetailsResponse):
+    FundingSource = {
       FundingSource(response.id, response.name, response.`type`, response.verified, response.processingType)
     }
 
@@ -81,6 +86,12 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
         addFundingSourceResponse <- dwollaApi.addFundingSource(accessToken, accountNumber, routingNumber,
           accountType, name)
       } yield addFundingSourceResponse
+    }
+
+    def retrieve(accessToken: String, id: Int): Future[FundingSource] = {
+      for {
+        getFundingSourceDetailsResponse <- dwollaApi.getFundingSourceDetails(accessToken, id)
+      } yield getFundingSourceDetailsResponse
     }
   }
 
