@@ -13,6 +13,12 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
   case class GetFundingSourceDetailsResponse(id: String, name: String, `type`: String, verified: Boolean,
                                              processingType: String, balance: BigDecimal)
 
+  case class DepositFundsResponse(amount: BigDecimal, date: Option[DateTime], destinationId: String,
+                                  destinationName: String, id: Int, sourceId: String, sourceName: String,
+                                  `type`: String, userType: String, status: String,
+                                  clearingDate: Option[DateTime],
+                                  notes: String)
+
   type SendMoneyAsGuestResponse = Int
 
   type SendMoneyResponse = Int
@@ -69,6 +75,8 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
 
   implicit def getFundingSourceDetailsResponseFormat = jsonFormat6(GetFundingSourceDetailsResponse)
 
+  implicit def depositFundsResponseFormat = jsonFormat12(DepositFundsResponse)
+
   implicit def getTransactionDetailsResponseFeeFormat = jsonFormat3(GetTransactionDetailsResponseFee)
 
   implicit def getTransactionDetailsResponseFormat = jsonFormat13(GetTransactionDetailsResponse)
@@ -80,4 +88,5 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
   implicit def findUsersNearbyResponseElementFormat = jsonFormat6(FindUsersNearbyResponseElement)
 
   implicit def issueRefundResponseFormat = jsonFormat3(IssueRefundResponse)
+
 }

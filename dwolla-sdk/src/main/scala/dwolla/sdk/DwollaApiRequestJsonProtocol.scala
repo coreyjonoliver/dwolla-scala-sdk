@@ -21,6 +21,8 @@ private[sdk] object DwollaApiRequestJsonProtocol extends DefaultJsonProtocol {
   case class AddFundingSourceRequest(accessToken: String, accountNumber: String, routingNumber: String,
                                      accountType: String, name: String)
 
+  case class DepositFundsRequest(accessToken: String, fundingId: Int, pin: String, amount: BigDecimal)
+
   case class SendAsGuestRequest(clientId: String, clientSecret: String, destinationId: String, amount: BigDecimal,
                                 firstName: String, lastName: String, emailAddress: String, routingNumber: String,
                                 accountNumber: String, accountType: String, assumeCosts: Option[Boolean] = None,
@@ -41,6 +43,8 @@ private[sdk] object DwollaApiRequestJsonProtocol extends DefaultJsonProtocol {
                            amount: BigDecimal, notes: Option[String])
 
   implicit val addFundingSourceRequestFormat = jsonFormat5(AddFundingSourceRequest)
+
+  implicit val depositFundsRequestFormat = jsonFormat4(DepositFundsRequest)
 
   implicit val facilitatorFeeFormat = jsonFormat2(FacilitatorFee)
 

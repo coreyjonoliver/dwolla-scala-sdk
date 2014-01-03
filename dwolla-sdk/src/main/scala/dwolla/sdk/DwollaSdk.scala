@@ -49,6 +49,17 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
       response.map(listAllTransactionsResponseElement2Transaction)
     }
 
+    implicit def depositFundsResponse2Transaction(response: DepositFundsResponse): Transaction = {
+      Transaction(response.amount, response.date,
+        response.destinationId,
+        response.destinationName, response.id,
+        Some(response.sourceId),
+        Some(response.sourceName), response.`type`,
+        response.userType,
+        response.status, response.clearingDate,
+        response.notes, List())
+    }
+
     implicit def basicAccountInformationResponse2User(response: BasicAccountInformationResponse): User = {
       User(response.id, response.latitude, response.longitude, response.name, None, None, None, None)
     }
@@ -130,6 +141,12 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
       for {
         transactionListingResponse <- dwollaApi.listAllTransactions(accessToken)
       } yield transactionListingResponse
+    }
+
+    def deposit(accessToken: String, fundingId: Int, pin: String, amount: BigDecimal): Future[Transaction] = {
+      for {
+        depositFundsResponse <- dwollaApi.depositFunds(accessToken, fundingId, pin, amount)
+      } yield depositFundsResponse
     }
   }
 

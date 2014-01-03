@@ -10,7 +10,9 @@ import spray.json._
 import spray.can.client.HostConnectorSettings
 import spray.can.Http.HostConnectorSetup
 import spray.httpx.SprayJsonSupport._
-import dwolla.sdk.DwollaApiRequestJsonProtocol.{AddFundingSourceRequest, SendAsGuestRequest, RefundRequest, SendRequest}
+import dwolla.sdk.DwollaApiRequestJsonProtocol.{AddFundingSourceRequest, SendAsGuestRequest, RefundRequest,
+SendRequest, DepositFundsRequest}
+
 
 class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
   implicit system: ActorSystem,
@@ -44,8 +46,9 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
   }
 
   def getBalance(accessToken: String): Future[GetBalanceResponse] = {
-    val uri = Uri("/oauth/rest/balance/").withQuery(Map("oauth_token" -> accessToken))
-    executeTo(Get(uri), mapResponse[GetBalanceResponse])
+    val uri = Uri("/oauth/rest/balance/")
+    val uriWithQuery = uri.withQuery(Map("oauth_token" -> accessToken))
+    executeTo(Get(uriWithQuery), mapResponse[GetBalanceResponse])
   }
 
   def addFundingSource(accessToken: String, accountNumber: String, routingNumber: String, accountType: String,
@@ -55,14 +58,23 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
     executeTo(Post(uri, raw), mapResponse[AddFundingSourceResponse])
   }
 
-  def getFundingSourceDetails(accessToken: String, fundingId: Int) = {
-    val uri = Uri(s"/fundingsources/$fundingId").withQuery(Map("oauth_token" -> accessToken))
-    executeTo(Get(uri), mapResponse[GetFundingSourceDetailsResponse])
+  def getFundingSourceDetails(accessToken: String, fundingId: Int): Future[GetFundingSourceDetailsResponse] = {
+    val uri = Uri(s"/fundingsources/$fundingId")
+    val uriWithQuery = uri.withQuery(Map("oauth_token" -> accessToken))
+    executeTo(Get(uriWithQuery), mapResponse[GetFundingSourceDetailsResponse])
+  }
+
+  def depositFunds(accessToken: String, fundingId: Int, pin: String,
+                   amount: BigDecimal): Future[DepositFundsResponse] = {
+    val uri = Uri(s"/oauth/rest/fundingsources/$fundingId/deposit")
+    val raw = DepositFundsRequest(accessToken, fundingId, pin, amount)
+    executeTo(Post(uri, raw), mapResponse[DepositFundsResponse])
   }
 
   def getTransactionDetails(accessToken: String, transactionId: Int) = {
-    val uri = Uri(s"/oauth/rest/transactions/$transactionId").withQuery(Map("oauth_token" -> accessToken))
-    executeTo(Get(uri), mapResponse[GetTransactionDetailsResponse])
+    val uri = Uri(s"/oauth/rest/transactions/$transactionId")
+    val uriWithQuery = uri.withQuery(Map("oauth_token" -> accessToken))
+    executeTo(Get(uriWithQuery), mapResponse[GetTransactionDetailsResponse])
   }
 
   def sendMoneyAsGuest(clientId: String, clientSecret: String, destinationId: String, amount: BigDecimal,
@@ -70,7 +82,7 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
                        accountNumber: String, accountType: String, assumeCosts: Option[Boolean] = None,
                        destinationType: Option[String] = None, notes: Option[String] = None, groupId: Option[Int],
                        additionalFees: Seq[FacilitatorFee] = List(), facilitatorAmount: Option[BigDecimal] = None,
-                       assumeAdditionalFees: Option[Boolean] = None) = {
+                       assumeAdditionalFees: Option[Boolean] = None): Future[SendMoneyAsGuestResponse] = {
     val uri = Uri("/oauth/rest/transactions/guestsend")
     val raw = SendAsGuestRequest(clientId, clientSecret, destinationId, amount, firstName, lastName, emailAddress,
       routingNumber, accountNumber, accountType, assumeCosts, destinationType, notes, groupId, additionalFees,
@@ -78,9 +90,10 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
     executeTo(Post(uri, raw), mapResponse[SendMoneyAsGuestResponse])
   }
 
-  def listAllTransactions(accessToken: String) = {
-    val uri = Uri(s"/oauth/rest/transactions/").withQuery(Map("oauth_token" -> accessToken))
-    executeTo(Get(uri), mapResponse[ListAllTransactionsResponse])
+  def listAllTransactions(accessToken: String): Future[ListAllTransactionsResponse] = {
+    val uri = Uri(s"/oauth/rest/transactions/")
+    val uriWithQuery = uri.withQuery(Map("oauth_token" -> accessToken))
+    executeTo(Get(uriWithQuery), mapResponse[ListAllTransactionsResponse])
   }
 
   def issueRefund(accessToken: String, pin: String, transactionId: Int, fundsSource: Int, amount: BigDecimal,
@@ -103,8 +116,9 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
   }
 
   def getFullAccountInformation(accessToken: String): Future[FullAccountInformationResponse] = {
-    val uri = Uri("/oauth/rest/users/").withQuery(Map("oauth_token" -> accessToken))
-    executeTo(Get(uri), mapResponse[FullAccountInformationResponse])
+    val uri = Uri("/oauth/rest/users/")
+    val uriWithQuery = uri.withQuery(Map("oauth_token" -> accessToken))
+    executeTo(Get(uriWithQuery), mapResponse[FullAccountInformationResponse])
   }
 
   def getBasicAccountInformation(clientId: String, clientSecret: String,
