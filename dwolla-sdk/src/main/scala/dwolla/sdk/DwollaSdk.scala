@@ -34,6 +34,10 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
         response.notes, fees)
     }
 
+    implicit def addFundingSource2FundingSource(response: AddFundingSourceResponse): FundingSource = {
+      FundingSource(response.id, response.name, response.`type`, response.verified, response.processingType)
+    }
+
     implicit def listAllTransactionsResponse2TransactionSeq(response: ListAllTransactionsResponse):
     Seq[Transaction] = {
       val listAllTransactionsResponseElement2Transaction = getTransactionDetailsResponse2Transaction _
@@ -51,6 +55,32 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
 
     implicit def findUsersNearbyResponse2UserSeq(response: FindUsersNearbyResponse): Seq[User] = {
       response.map(x => User(x.id, x.latitude, x.longitude, x.name, None, None, None, Some(x.image)))
+    }
+  }
+
+  type Balance = BigDecimal
+
+  object Balance {
+    def retrieve(accessToken: String): Future[Balance] = {
+      for {
+        balanceResponse <- dwollaApi.getBalance(accessToken)
+      } yield balanceResponse
+    }
+  }
+
+  case class FundingSource(id: String, name: String, `type`: String, verified: Boolean,
+                           processingType: String)
+
+  object FundingSource {
+
+    import Mappings._
+
+    def create(accessToken: String, accountNumber: String, routingNumber: String, accountType: String,
+               name: String): Future[FundingSource] = {
+      for {
+        addFundingSourceResponse <- dwollaApi.addFundingSource(accessToken, accountNumber, routingNumber,
+          accountType, name)
+      } yield addFundingSourceResponse
     }
   }
 
@@ -89,16 +119,6 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
       for {
         transactionListingResponse <- dwollaApi.listAllTransactions(accessToken)
       } yield transactionListingResponse
-    }
-  }
-
-  type Balance = BigDecimal
-
-  object Balance {
-    def retrieve(accessToken: String): Future[Balance] = {
-      for {
-        balanceResponse <- dwollaApi.getBalance(accessToken)
-      } yield balanceResponse
     }
   }
 

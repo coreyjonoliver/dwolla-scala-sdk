@@ -11,16 +11,24 @@ private[sdk] object DwollaApiRequestJsonProtocol extends DefaultJsonProtocol {
       case "accessToken" => "oauth_token"
       case "clientId" => "client_id"
       case "clientSecret" => "client_secret"
+      case "accountNumber" => "account_number"
+      case "routingNumber" => "routing_number"
+      case "accountType" => "account_type"
       case n => n
     }
   }
 
+  case class AddFundingSourceRequest(accessToken: String, accountNumber: String, routingNumber: String,
+                                     accountType: String, name: String)
+
   case class SendAsGuestRequest(clientId: String, clientSecret: String, destinationId: String, amount: BigDecimal,
-    firstName: String, lastName: String, emailAddress: String, routingNumber: String,
-    accountNumber: String, accountType: String, assumeCosts: Option[Boolean] = None,
-  destinationType: Option[String] = None, notes: Option[String] = None, groupId: Option[Int],
-  additionalFees: Seq[FacilitatorFee] = List(), facilitatorAmount: Option[BigDecimal] = None,
-  assumeAdditionalFees: Option[Boolean] = None)
+                                firstName: String, lastName: String, emailAddress: String, routingNumber: String,
+                                accountNumber: String, accountType: String, assumeCosts: Option[Boolean] = None,
+                                destinationType: Option[String] = None, notes: Option[String] = None,
+                                groupId: Option[Int],
+                                additionalFees: Seq[FacilitatorFee] = List(), facilitatorAmount: Option[BigDecimal] =
+  None,
+                                assumeAdditionalFees: Option[Boolean] = None)
 
   case class SendRequest(accessToken: String, pin: String, destinationId: String, amount: BigDecimal,
                          destinationType: Option[String] = None,
@@ -31,6 +39,8 @@ private[sdk] object DwollaApiRequestJsonProtocol extends DefaultJsonProtocol {
 
   case class RefundRequest(accessToken: String, pin: String, transactionId: Int, fundsSource: Int,
                            amount: BigDecimal, notes: Option[String])
+
+  implicit val addFundingSourceRequestFormat = jsonFormat5(AddFundingSourceRequest)
 
   implicit val facilitatorFeeFormat = jsonFormat2(FacilitatorFee)
 

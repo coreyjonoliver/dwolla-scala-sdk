@@ -8,6 +8,11 @@ private[sdk] case class FacilitatorFee(destinationId: String,
 
 private[sdk] trait DwollaApi {
 
+  def getBalance(accessToken: String): Future[BigDecimal]
+
+  def addFundingSource(accessToken: String, accountNumber: String, routingNumber: String, accountType: String,
+                       name: String): Future[AddFundingSourceResponse]
+
   def getTransactionDetails(accessToken: String, transactionId: Int): Future[GetTransactionDetailsResponse]
 
   def sendMoneyAsGuest(clientId: String, clientSecret: String, destinationId: String, amount: BigDecimal,
@@ -29,8 +34,6 @@ private[sdk] trait DwollaApi {
            notes: Option[String] = None,
            additionalFees: Seq[FacilitatorFee] = List(), assumeAdditionalFees: Option[Boolean] = None):
   Future[SendMoneyResponse]
-
-  def getBalance(accessToken: String): Future[BigDecimal]
 
   def getFullAccountInformation(accessToken: String): Future[FullAccountInformationResponse]
 
