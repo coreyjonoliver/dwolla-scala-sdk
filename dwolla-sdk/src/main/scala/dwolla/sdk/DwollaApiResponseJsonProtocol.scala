@@ -5,6 +5,10 @@ import com.github.nscala_time.time.Imports._
 
 private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtocol {
 
+  case class GetAccessTokenResponse(accessToken: String)
+
+  case class GetAccessTokenErrorResponse(error: String, errorDescription: String)
+
   case class Response[T: JsonFormat](success: Boolean, message: String, response: Option[T])
 
   case class AddFundingSourceResponse(id: String, name: String, `type`: String, verified: Boolean,
@@ -68,6 +72,10 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
       }
     }
   }
+
+  implicit def getAccessTokenResponse = jsonFormat1(GetAccessTokenResponse)
+
+  implicit def getAccessTokenErrorResponse = jsonFormat2(GetAccessTokenErrorResponse)
 
   implicit def responseFormat[T: JsonFormat] = jsonFormat3(Response.apply[T])
 

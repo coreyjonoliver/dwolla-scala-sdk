@@ -74,6 +74,16 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
     }
   }
 
+  type AccessToken = String
+
+  object AccessToken {
+    def create(clientId: String, clientSecret: String, code: String, redirectUri: Option[String] = None) = {
+      for {
+        tokenResponse <- dwollaApi.getAccessToken(clientId, clientSecret, code, redirectUri)
+      } yield tokenResponse
+    }
+  }
+
   type Balance = BigDecimal
 
   object Balance {

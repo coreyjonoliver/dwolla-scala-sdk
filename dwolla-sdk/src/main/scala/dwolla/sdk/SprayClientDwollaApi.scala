@@ -12,6 +12,23 @@ import spray.can.Http.HostConnectorSetup
 import spray.httpx.SprayJsonSupport._
 import dwolla.sdk.DwollaApiRequestJsonProtocol.{AddFundingSourceRequest, SendAsGuestRequest, RefundRequest,
 SendRequest, DepositFundsRequest}
+import spray.http.HttpRequest
+import dwolla.sdk.DwollaApiRequestJsonProtocol.DepositFundsRequest
+import dwolla.sdk.DwollaApiResponseJsonProtocol.Response
+import dwolla.sdk.DwollaApiRequestJsonProtocol.AddFundingSourceRequest
+import dwolla.sdk.DwollaApiRequestJsonProtocol.SendRequest
+import scala.Some
+import dwolla.sdk.DwollaApiResponseJsonProtocol.IssueRefundResponse
+import dwolla.sdk.DwollaApiRequestJsonProtocol.SendAsGuestRequest
+import dwolla.sdk.DwollaApiRequestJsonProtocol.RefundRequest
+import dwolla.sdk.DwollaApiResponseJsonProtocol.GetFundingSourceDetailsResponse
+import dwolla.sdk.DwollaApiResponseJsonProtocol.FullAccountInformationResponse
+import spray.http.HttpResponse
+import dwolla.sdk.DwollaApiResponseJsonProtocol.AddFundingSourceResponse
+import dwolla.sdk.DwollaApiResponseJsonProtocol.GetTransactionDetailsResponse
+import dwolla.sdk.DwollaApiResponseJsonProtocol.GetAccessTokenResponse
+import dwolla.sdk.DwollaApiResponseJsonProtocol.BasicAccountInformationResponse
+import dwolla.sdk.DwollaApiResponseJsonProtocol.DepositFundsResponse
 
 
 class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
@@ -32,6 +49,24 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
 
   private def executeTo[T](req: HttpRequest, m: (HttpResponse => T)): Future[T] = execute(req).map(m)
 
+  private def mapAuthResponse(response: HttpResponse) = {
+    if (response.status.isSuccess) {
+      try {
+        response.entity.asString.asJson.convertTo[GetAccessTokenResponse]
+      }
+      catch {
+        case e: DeserializationException => {
+          val parsedResponse = response.entity.asString.asJson.convertTo[GetAccessTokenErrorResponse]
+          throw new DwollaException(s"Error: ${parsedResponse.error}, Error description: ${
+            parsedResponse
+              .errorDescription
+          }")
+        }
+      }
+    }
+    else throw new DwollaException("Unsuccessful response: " + response.entity.asString)
+  }
+
   private def mapResponse[T: JsonFormat](response: HttpResponse) = {
     if (response.status.isSuccess) {
       val parsedResponse = response.entity.asString.asJson.convertTo[Response[T]]
@@ -43,6 +78,18 @@ class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
     } else {
       throw new DwollaException("Unsuccessful response: " + response.entity.asString)
     }
+  }
+
+  def getAccessToken(clientId: String, clientSecret: String, code: String, redirectUri: Option[String] = None):
+  Future[GetAccessTokenResponse] = {
+    val uri = Uri("/oauth/v2/token")
+    val uriWithQuery = uri.withQuery(Map("client_id" -> Some(clientId),
+      "client_secret" -> Some(clientSecret),
+      "grant_type" -> Some("authorization_code"), "redirect_uri" -> redirectUri, "code" -> Some(code)).flatMap {
+      case (_, None) => None
+      case (k, Some(v)) => Some(k -> v)
+    })
+    executeTo(Get(uriWithQuery), mapAuthResponse)
   }
 
   def getBalance(accessToken: String): Future[GetBalanceResponse] = {

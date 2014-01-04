@@ -8,7 +8,10 @@ private[sdk] case class FacilitatorFee(destinationId: String,
 
 private[sdk] trait DwollaApi {
 
-  def getBalance(accessToken: String): Future[BigDecimal]
+  def getAccessToken(clientId: String, clientSecret: String, code: String, redirectUri: Option[String] = None):
+  Future[GetAccessTokenResponse]
+
+  def getBalance(accessToken: String): Future[GetBalanceResponse]
 
   def addFundingSource(accessToken: String, accountNumber: String, routingNumber: String, accountType: String,
                        name: String): Future[AddFundingSourceResponse]
@@ -20,23 +23,23 @@ private[sdk] trait DwollaApi {
   def getTransactionDetails(accessToken: String, transactionId: Int): Future[GetTransactionDetailsResponse]
 
   def sendMoneyAsGuest(clientId: String, clientSecret: String, destinationId: String, amount: BigDecimal,
-                  firstName: String, lastName: String, emailAddress: String, routingNumber: String,
-                  accountNumber: String, accountType: String, assumeCosts: Option[Boolean] = None,
-                  destinationType: Option[String] = None, notes: Option[String] = None, groupId: Option[Int],
-                  additionalFees: Seq[FacilitatorFee] = List(), facilitatorAmount: Option[BigDecimal] = None,
-                  assumeAdditionalFees: Option[Boolean] = None): Future[SendMoneyAsGuestResponse]
+                       firstName: String, lastName: String, emailAddress: String, routingNumber: String,
+                       accountNumber: String, accountType: String, assumeCosts: Option[Boolean] = None,
+                       destinationType: Option[String] = None, notes: Option[String] = None, groupId: Option[Int],
+                       additionalFees: Seq[FacilitatorFee] = List(), facilitatorAmount: Option[BigDecimal] = None,
+                       assumeAdditionalFees: Option[Boolean] = None): Future[SendMoneyAsGuestResponse]
 
   def listAllTransactions(accessToken: String): Future[Seq[GetTransactionDetailsResponse]]
 
 
   def issueRefund(accessToken: String, pin: String, transactionId: Int, fundsSource: Int, amount: BigDecimal,
-             notes: Option[String]): Future[IssueRefundResponse]
+                  notes: Option[String]): Future[IssueRefundResponse]
 
   def sendMoney(accessToken: String, pin: String, destinationId: String, amount: BigDecimal,
-           destinationType: Option[String] = None,
-           facilitatorAmount: Option[BigDecimal] = None, assumeCosts: Option[Boolean] = None,
-           notes: Option[String] = None,
-           additionalFees: Seq[FacilitatorFee] = List(), assumeAdditionalFees: Option[Boolean] = None):
+                destinationType: Option[String] = None,
+                facilitatorAmount: Option[BigDecimal] = None, assumeCosts: Option[Boolean] = None,
+                notes: Option[String] = None,
+                additionalFees: Seq[FacilitatorFee] = List(), assumeAdditionalFees: Option[Boolean] = None):
   Future[SendMoneyResponse]
 
   def getFullAccountInformation(accessToken: String): Future[FullAccountInformationResponse]
@@ -45,5 +48,5 @@ private[sdk] trait DwollaApi {
                                  accountIdentifier: String): Future[BasicAccountInformationResponse]
 
   def findUsersNearby(clientId: String, clientSecret: String, latitude: BigDecimal,
-                longitude: BigDecimal): Future[FindUsersNearbyResponse]
+                      longitude: BigDecimal): Future[FindUsersNearbyResponse]
 }
