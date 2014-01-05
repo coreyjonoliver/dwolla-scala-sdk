@@ -12,6 +12,7 @@ import scala.Some
 import dwolla.sdk.DwollaApiResponseJsonProtocol.FullAccountInformationResponse
 import dwolla.sdk.DwollaApiResponseJsonProtocol.GetTransactionDetailsResponse
 import dwolla.sdk.DwollaApiResponseJsonProtocol.BasicAccountInformationResponse
+import spray.http.Uri
 
 class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
   implicit system: ActorSystem,
@@ -71,6 +72,21 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
 
     implicit def findUsersNearbyResponse2UserSeq(response: FindUsersNearbyResponse): Seq[User] = {
       response.map(x => User(x.id, x.latitude, x.longitude, x.name, None, None, None, Some(x.image)))
+    }
+  }
+
+  type AuthenticationUrl = String
+
+  object AuthenticationUrl {
+    def create(clientId: String, scopes: Seq[String], redirectUri: Option[String] = None) = {
+      val uri = Uri("/oauth/v2/token")
+      uri.withQuery(Map("client_id" -> Some(clientId),
+        "response_type" -> Some("code"),
+        "redirect_uri" -> redirectUri,
+        "scope" -> Some(scopes.mkString("|"))).flatMap {
+        case (_, None) => None
+        case (k, Some(v)) => Some(k -> v)
+      })
     }
   }
 
