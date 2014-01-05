@@ -86,7 +86,7 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
         "scope" -> Some(scopes.mkString("|"))).flatMap {
         case (_, None) => None
         case (k, Some(v)) => Some(k -> v)
-      })
+      }).toString
     }
   }
 
