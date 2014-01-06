@@ -31,17 +31,19 @@ import dwolla.sdk.DwollaApiResponseJsonProtocol.BasicAccountInformationResponse
 import dwolla.sdk.DwollaApiResponseJsonProtocol.DepositFundsResponse
 
 
-class SprayClientDwollaApi(settings: Option[HostConnectorSettings] = None)(
+class SprayClientDwollaApi(settings: Option[DwollaApiSettings] = None)(
   implicit system: ActorSystem,
   timeout: Timeout,
   ec: ExecutionContext) extends SprayHttpClient with DwollaApi {
 
-  private val setup = HostConnectorSetup(
-    host = "www.dwolla.com",
-    port = 443,
-    sslEncryption = true,
-    settings = settings
-  )
+  private val setup: HostConnectorSetup = {
+    val setup = for {
+      settings <- settings
+      setup <- Some(HostConnectorSetup(host = settings.host, port = settings.port,
+        sslEncryption = settings.sslEncryption))
+    } yield setup
+    setup.getOrElse(HostConnectorSetup(host = "www.dwolla.com", port = 443, sslEncryption = true))
+  }
 
   private val requestPreparer: RequestTransformer = addHeader("Accept", "application/json")
 

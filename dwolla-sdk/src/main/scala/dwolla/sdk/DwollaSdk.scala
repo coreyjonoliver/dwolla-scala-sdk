@@ -1,7 +1,6 @@
 package dwolla.sdk
 
 import scala.concurrent.Future
-import spray.can.client.HostConnectorSettings
 import akka.actor.ActorSystem
 import akka.util.Timeout
 import scala.concurrent.ExecutionContext
@@ -14,7 +13,7 @@ import dwolla.sdk.DwollaApiResponseJsonProtocol.GetTransactionDetailsResponse
 import dwolla.sdk.DwollaApiResponseJsonProtocol.BasicAccountInformationResponse
 import spray.http.Uri
 
-class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
+class DwollaSdk(settings: Option[DwollaApiSettings] = None)(
   implicit system: ActorSystem,
   timeout: Timeout,
   ec: ExecutionContext) {
@@ -80,13 +79,11 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
   object AuthenticationUrl {
     def create(clientId: String, scopes: Seq[String], redirectUri: Option[String] = None) = {
       val uri = Uri("/oauth/v2/token")
-      uri.withQuery(Map("client_id" -> Some(clientId),
-        "response_type" -> Some("code"),
-        "redirect_uri" -> redirectUri,
-        "scope" -> Some(scopes.mkString("|"))).flatMap {
-        case (_, None) => None
-        case (k, Some(v)) => Some(k -> v)
-      }).toString
+      val queryMap = Map("client_id" -> clientId,
+        "response_type" -> "code",
+        "scope" -> scopes.mkString("|"))
+      if (redirectUri.isDefined) uri.withQuery(queryMap ++ Map("redirect_uri" -> redirectUri.get)).toString()
+      else uri.withQuery(queryMap).toString()
     }
   }
 
@@ -114,7 +111,6 @@ class DwollaSdk(settings: Option[HostConnectorSettings] = None)(
                            processingType: String)
 
   object FundingSource {
-
     import Mappings._
 
     def create(accessToken: String, accountNumber: String, routingNumber: String, accountType: String,
