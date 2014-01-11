@@ -2,11 +2,14 @@ package dwolla.sdk
 
 import spray.json._
 import com.github.nscala_time.time.Imports._
+import org.joda.time.format.DateTimeFormatterBuilder
 
 private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtocol {
 
+  // TODO: Parse fields as snakified lowercase
   case class GetAccessTokenResponse(accessToken: String)
 
+  // TODO: Parse fields as snakified lowercase
   case class GetAccessTokenErrorResponse(error: String, errorDescription: String)
 
   case class Response[T: JsonFormat](success: Boolean, message: String, response: Option[T])
@@ -21,7 +24,12 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
                                   destinationName: String, id: Int, sourceId: String, sourceName: String,
                                   `type`: String, userType: String, status: String,
                                   clearingDate: Option[DateTime],
-                                  notes: String)
+                                  notes: Option[String])
+
+  case class ListFundingSourcesResponseElement(id: String, name: String, `type`: String, verified: Boolean,
+                                               processingType: String)
+
+  type ListFundingSourcesResponse = List[ListFundingSourcesResponseElement]
 
   type SendMoneyAsGuestResponse = Int
 
@@ -33,7 +41,7 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
                                            destinationName: String, id: Int, sourceId: String, sourceName: String,
                                            `type`: String, userType: String, status: String,
                                            clearingDate: Option[DateTime],
-                                           notes: String, fees: Option[Seq[GetTransactionDetailsResponseFee]])
+                                           notes: Option[String], fees: Option[Seq[GetTransactionDetailsResponseFee]])
 
   type ListAllTransactionsResponseElement = GetTransactionDetailsResponse
 
@@ -55,11 +63,12 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
   case class IssueRefundResponse(transactionId: Int, refundDate: Option[DateTime], amount: BigDecimal)
 
   implicit object JodaDateTimeFormat extends RootJsonFormat[Option[DateTime]] {
-    def dateTimeFormatter = DateTimeFormat.forPattern("MM/dd/yyyy HH:mm:ss")
+    val formatter = new DateTimeFormatterBuilder().appendPattern("MM/dd/yyyy").appendOptional(DateTimeFormat
+      .forPattern(" HH:mm:ss").getParser()).toFormatter()
 
     def write(obj: Option[DateTime]): JsValue = {
       obj match {
-        case Some(date) => JsString(dateTimeFormatter.print(date))
+        case Some(date) => JsString(formatter.print(date))
         case None => JsNull
       }
     }
@@ -67,7 +76,7 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
     def read(json: JsValue): Option[DateTime] = {
       json match {
         case JsString("") => None // some DateTime fields contain an empty string when they should contain null
-        case JsString(date) => Some(dateTimeFormatter.parseDateTime(date))
+        case JsString(date) => Some(formatter.parseDateTime(date))
         case _ => throw new DeserializationException("DateTime expected")
       }
     }
@@ -84,6 +93,8 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
   implicit def getFundingSourceDetailsResponseFormat = jsonFormat6(GetFundingSourceDetailsResponse)
 
   implicit def depositFundsResponseFormat = jsonFormat12(DepositFundsResponse)
+
+  implicit def listFundingSourcesResponseElementFormat = jsonFormat5(ListFundingSourcesResponseElement)
 
   implicit def getTransactionDetailsResponseFeeFormat = jsonFormat3(GetTransactionDetailsResponseFee)
 

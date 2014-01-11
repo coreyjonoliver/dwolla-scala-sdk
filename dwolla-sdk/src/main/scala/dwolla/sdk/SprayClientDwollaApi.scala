@@ -113,11 +113,17 @@ class SprayClientDwollaApi(settings: Option[DwollaApiSettings] = None)(
     executeTo(Get(uriWithQuery), mapResponse[GetFundingSourceDetailsResponse])
   }
 
-  def depositFunds(accessToken: String, fundingId: Int, pin: String,
+  def depositFunds(accessToken: String, fundingId: String, pin: String,
                    amount: BigDecimal): Future[DepositFundsResponse] = {
     val uri = Uri(s"/oauth/rest/fundingsources/$fundingId/deposit")
     val raw = DepositFundsRequest(accessToken, fundingId, pin, amount)
     executeTo(Post(uri, raw), mapResponse[DepositFundsResponse])
+  }
+
+  def listFundingSources(accessToken: String): Future[ListFundingSourcesResponse] = {
+    val uri = Uri("/oauth/rest/fundingsources/")
+    val uriWithQuery = uri.withQuery(Map("oauth_token" -> accessToken))
+    executeTo(Get(uriWithQuery), mapResponse[ListFundingSourcesResponse])
   }
 
   def getTransactionDetails(accessToken: String, transactionId: Int) = {

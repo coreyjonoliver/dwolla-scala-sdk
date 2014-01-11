@@ -21,7 +21,7 @@ private[sdk] object DwollaApiRequestJsonProtocol extends DefaultJsonProtocol {
   case class AddFundingSourceRequest(accessToken: String, accountNumber: String, routingNumber: String,
                                      accountType: String, name: String)
 
-  case class DepositFundsRequest(accessToken: String, fundingId: Int, pin: String, amount: BigDecimal)
+  case class DepositFundsRequest(accessToken: String, fundingId: String, pin: String, amount: BigDecimal)
 
   case class SendAsGuestRequest(clientId: String, clientSecret: String, destinationId: String, amount: BigDecimal,
                                 firstName: String, lastName: String, emailAddress: String, routingNumber: String,

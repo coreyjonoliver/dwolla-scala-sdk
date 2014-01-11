@@ -60,6 +60,16 @@ class DwollaSdk(settings: Option[DwollaApiSettings] = None)(
         response.notes, List())
     }
 
+    implicit def fundingSourcesListingResponseElement2FundingSource(response: ListFundingSourcesResponseElement):
+    FundingSource = {
+      FundingSource(response.id, response.name, response.`type`, response.verified, response.processingType)
+    }
+
+    implicit def fundingSourcesListingResponse2FundingSourceList(response: ListFundingSourcesResponse):
+    List[FundingSource] = {
+      response.map(fundingSourcesListingResponseElement2FundingSource)
+    }
+
     implicit def basicAccountInformationResponse2User(response: BasicAccountInformationResponse): User = {
       User(response.id, response.latitude, response.longitude, response.name, None, None, None, None)
     }
@@ -78,7 +88,7 @@ class DwollaSdk(settings: Option[DwollaApiSettings] = None)(
 
   object AuthenticationUrl {
     def create(clientId: String, scopes: Seq[String], redirectUri: Option[String] = None) = {
-      val uri = Uri("/oauth/v2/token")
+      val uri = Uri("/oauth/v2/authenticate")
       val queryMap = Map("client_id" -> clientId,
         "response_type" -> "code",
         "scope" -> scopes.mkString("|"))
@@ -111,6 +121,7 @@ class DwollaSdk(settings: Option[DwollaApiSettings] = None)(
                            processingType: String)
 
   object FundingSource {
+
     import Mappings._
 
     def create(accessToken: String, accountNumber: String, routingNumber: String, accountType: String,
@@ -126,6 +137,12 @@ class DwollaSdk(settings: Option[DwollaApiSettings] = None)(
         getFundingSourceDetailsResponse <- dwollaApi.getFundingSourceDetails(accessToken, id)
       } yield getFundingSourceDetailsResponse
     }
+
+    def all(accessToken: String): Future[List[FundingSource]] = {
+      for {
+        fundingSourcesListingResponse <- dwollaApi.listFundingSources(accessToken)
+      } yield fundingSourcesListingResponse
+    }
   }
 
   case class Fee(id: Int, amount: BigDecimal, `type`: String)
@@ -133,7 +150,7 @@ class DwollaSdk(settings: Option[DwollaApiSettings] = None)(
   case class Transaction(amount: BigDecimal, date: Option[DateTime], destinationId: String,
                          destinationName: String, id: Int, sourceId: Option[String], sourceName: Option[String],
                          `type`: String, userType: String, status: String, clearingDate: Option[DateTime],
-                         notes: String, fees: Seq[Fee])
+                         notes: Option[String], fees: Seq[Fee])
 
   object Transaction {
 
@@ -165,7 +182,7 @@ class DwollaSdk(settings: Option[DwollaApiSettings] = None)(
       } yield transactionListingResponse
     }
 
-    def deposit(accessToken: String, fundingId: Int, pin: String, amount: BigDecimal): Future[Transaction] = {
+    def deposit(accessToken: String, fundingId: String, pin: String, amount: BigDecimal): Future[Transaction] = {
       for {
         depositFundsResponse <- dwollaApi.depositFunds(accessToken, fundingId, pin, amount)
       } yield depositFundsResponse
