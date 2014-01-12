@@ -29,6 +29,7 @@ import dwolla.sdk.DwollaApiResponseJsonProtocol.GetTransactionDetailsResponse
 import dwolla.sdk.DwollaApiResponseJsonProtocol.GetAccessTokenResponse
 import dwolla.sdk.DwollaApiResponseJsonProtocol.BasicAccountInformationResponse
 import dwolla.sdk.DwollaApiResponseJsonProtocol.DepositFundsResponse
+import spray.http.HttpHeaders.{`User-Agent`, Accept}
 
 
 class SprayClientDwollaApi(settings: Option[DwollaApiSettings] = None)(
@@ -45,7 +46,8 @@ class SprayClientDwollaApi(settings: Option[DwollaApiSettings] = None)(
     setup.getOrElse(HostConnectorSetup(host = "www.dwolla.com", port = 443, sslEncryption = true))
   }
 
-  private val requestPreparer: RequestTransformer = addHeader("Accept", "application/json")
+  private val requestPreparer: RequestTransformer = addHeaders(List(Accept(MediaTypes.`application/json`),
+    `User-Agent`("Dwolla-Scala-SDK")))
 
   private def execute[T](req: HttpRequest): Future[HttpResponse] = pipeline(setup).flatMap(_(requestPreparer(req)))
 
