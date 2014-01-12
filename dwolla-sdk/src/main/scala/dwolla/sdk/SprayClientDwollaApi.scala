@@ -5,37 +5,22 @@ import akka.actor.ActorSystem
 import spray.client.pipelining._
 import akka.util.Timeout
 import spray.http._
-import DwollaApiResponseJsonProtocol._
-import spray.json._
-import spray.can.client.HostConnectorSettings
 import spray.can.Http.HostConnectorSetup
-import spray.httpx.SprayJsonSupport._
-import dwolla.sdk.DwollaApiRequestJsonProtocol.{AddFundingSourceRequest, SendAsGuestRequest, RefundRequest,
-SendRequest, DepositFundsRequest}
-import spray.http.HttpRequest
-import dwolla.sdk.DwollaApiRequestJsonProtocol.DepositFundsRequest
-import dwolla.sdk.DwollaApiResponseJsonProtocol.Response
-import dwolla.sdk.DwollaApiRequestJsonProtocol.AddFundingSourceRequest
-import dwolla.sdk.DwollaApiRequestJsonProtocol.SendRequest
-import scala.Some
-import dwolla.sdk.DwollaApiResponseJsonProtocol.IssueRefundResponse
-import dwolla.sdk.DwollaApiRequestJsonProtocol.SendAsGuestRequest
-import dwolla.sdk.DwollaApiRequestJsonProtocol.RefundRequest
-import dwolla.sdk.DwollaApiResponseJsonProtocol.GetFundingSourceDetailsResponse
-import dwolla.sdk.DwollaApiResponseJsonProtocol.FullAccountInformationResponse
 import spray.http.HttpResponse
-import dwolla.sdk.DwollaApiResponseJsonProtocol.AddFundingSourceResponse
-import dwolla.sdk.DwollaApiResponseJsonProtocol.GetTransactionDetailsResponse
-import dwolla.sdk.DwollaApiResponseJsonProtocol.GetAccessTokenResponse
-import dwolla.sdk.DwollaApiResponseJsonProtocol.BasicAccountInformationResponse
-import dwolla.sdk.DwollaApiResponseJsonProtocol.DepositFundsResponse
 import spray.http.HttpHeaders.{`User-Agent`, Accept}
-
+import dwolla.sdk.Responses._
+import dwolla.sdk.Requests._
+import spray.json._
+import dwolla.sdk.DwollaApiRequestJsonProtocol._
+import dwolla.sdk.DwollaApiResponseJsonProtocol._
+import spray.httpx.SprayJsonSupport._
 
 class SprayClientDwollaApi(settings: Option[DwollaApiSettings] = None)(
   implicit system: ActorSystem,
   timeout: Timeout,
   ec: ExecutionContext) extends SprayHttpClient with DwollaApi {
+
+  import spray.json.DefaultJsonProtocol._
 
   private val setup: HostConnectorSetup = {
     val setup = for {
@@ -45,6 +30,7 @@ class SprayClientDwollaApi(settings: Option[DwollaApiSettings] = None)(
     } yield setup
     setup.getOrElse(HostConnectorSetup(host = "www.dwolla.com", port = 443, sslEncryption = true))
   }
+
 
   private val requestPreparer: RequestTransformer = addHeaders(List(Accept(MediaTypes.`application/json`),
     `User-Agent`("Dwolla-Scala-SDK")))

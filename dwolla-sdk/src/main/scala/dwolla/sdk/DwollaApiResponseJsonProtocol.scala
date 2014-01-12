@@ -3,64 +3,10 @@ package dwolla.sdk
 import spray.json._
 import com.github.nscala_time.time.Imports._
 import org.joda.time.format.DateTimeFormatterBuilder
+import dwolla.sdk.Responses._
+import dwolla.sdk.Requests._
 
-private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtocol {
-
-  // TODO: Parse fields as snakified lowercase
-  case class GetAccessTokenResponse(accessToken: String)
-
-  // TODO: Parse fields as snakified lowercase
-  case class GetAccessTokenErrorResponse(error: String, errorDescription: String)
-
-  case class Response[T: JsonFormat](success: Boolean, message: String, response: Option[T])
-
-  case class AddFundingSourceResponse(id: String, name: String, `type`: String, verified: Boolean,
-                                      processingType: String)
-
-  case class GetFundingSourceDetailsResponse(id: String, name: String, `type`: String, verified: Boolean,
-                                             processingType: String, balance: BigDecimal)
-
-  case class DepositFundsResponse(amount: BigDecimal, date: Option[DateTime], destinationId: String,
-                                  destinationName: String, id: Int, sourceId: String, sourceName: String,
-                                  `type`: String, userType: String, status: String,
-                                  clearingDate: Option[DateTime],
-                                  notes: Option[String])
-
-  case class ListFundingSourcesResponseElement(id: String, name: String, `type`: String, verified: Boolean,
-                                               processingType: String)
-
-  type ListFundingSourcesResponse = List[ListFundingSourcesResponseElement]
-
-  type SendMoneyAsGuestResponse = Int
-
-  type SendMoneyResponse = Int
-
-  case class GetTransactionDetailsResponseFee(id: Int, amount: BigDecimal, `type`: String)
-
-  case class GetTransactionDetailsResponse(amount: BigDecimal, date: Option[DateTime], destinationId: String,
-                                           destinationName: String, id: Int, sourceId: String, sourceName: String,
-                                           `type`: String, userType: String, status: String,
-                                           clearingDate: Option[DateTime],
-                                           notes: Option[String], fees: Option[Seq[GetTransactionDetailsResponseFee]])
-
-  type ListAllTransactionsResponseElement = GetTransactionDetailsResponse
-
-  type ListAllTransactionsResponse = Seq[ListAllTransactionsResponseElement]
-
-  type GetBalanceResponse = BigDecimal
-
-  case class FullAccountInformationResponse(city: String, id: String, latitude: BigDecimal, longitude: BigDecimal,
-                                            name: String, state: String, `type`: String)
-
-  case class BasicAccountInformationResponse(id: String, latitude: BigDecimal, longitude: BigDecimal, name: String)
-
-  case class FindUsersNearbyResponseElement(id: String, latitude: BigDecimal, name: String, longitude: BigDecimal,
-                                            delta: BigDecimal,
-                                            image: String)
-
-  type FindUsersNearbyResponse = Seq[FindUsersNearbyResponseElement]
-
-  case class IssueRefundResponse(transactionId: Int, refundDate: Option[DateTime], amount: BigDecimal)
+object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtocol {
 
   implicit object JodaDateTimeFormat extends RootJsonFormat[Option[DateTime]] {
     val formatter = new DateTimeFormatterBuilder().appendPattern("MM/dd/yyyy").appendOptional(DateTimeFormat
@@ -107,5 +53,4 @@ private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtoco
   implicit def findUsersNearbyResponseElementFormat = jsonFormat6(FindUsersNearbyResponseElement)
 
   implicit def issueRefundResponseFormat = jsonFormat3(IssueRefundResponse)
-
 }

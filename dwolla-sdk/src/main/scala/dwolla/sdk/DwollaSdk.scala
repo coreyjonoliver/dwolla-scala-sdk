@@ -5,12 +5,9 @@ import akka.actor.ActorSystem
 import akka.util.Timeout
 import scala.concurrent.ExecutionContext
 import com.github.nscala_time.time.Imports._
-import dwolla.sdk.DwollaApiResponseJsonProtocol._
+import dwolla.sdk.Responses._
 import scala.language.implicitConversions
 import scala.Some
-import dwolla.sdk.DwollaApiResponseJsonProtocol.FullAccountInformationResponse
-import dwolla.sdk.DwollaApiResponseJsonProtocol.GetTransactionDetailsResponse
-import dwolla.sdk.DwollaApiResponseJsonProtocol.BasicAccountInformationResponse
 import spray.http.Uri
 
 class DwollaSdk(settings: Option[DwollaApiSettings] = None)(
