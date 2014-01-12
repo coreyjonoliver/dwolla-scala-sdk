@@ -15,7 +15,8 @@ object Build extends Build {
     .settings(dwollaModuleSettings: _*)
     .settings(libraryDependencies ++=
     provided(akkaActor) ++
-    compile(sprayClient, sprayJson, nscalaTime)
+    compile(sprayClient, sprayJson, nscalaTime) ++
+    test(specs2, scalaCheck)
     )
 
   lazy val examples = Project(id = "examples", base = file("examples"))
