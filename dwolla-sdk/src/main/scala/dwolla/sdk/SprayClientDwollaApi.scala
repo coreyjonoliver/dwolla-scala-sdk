@@ -11,6 +11,7 @@ import spray.http.HttpHeaders.{`User-Agent`, Accept}
 import dwolla.sdk.Responses._
 import dwolla.sdk.Requests._
 import spray.json._
+import dwolla.sdk.DwollaApiAuthResponseJsonProtocol._
 import dwolla.sdk.DwollaApiRequestJsonProtocol._
 import dwolla.sdk.DwollaApiResponseJsonProtocol._
 import spray.httpx.SprayJsonSupport._

@@ -4,9 +4,8 @@ import spray.json._
 import com.github.nscala_time.time.Imports._
 import org.joda.time.format.DateTimeFormatterBuilder
 import dwolla.sdk.Responses._
-import dwolla.sdk.Requests._
 
-object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtocol {
+private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtocol {
 
   implicit object JodaDateTimeFormat extends RootJsonFormat[Option[DateTime]] {
     val formatter = new DateTimeFormatterBuilder().appendPattern("MM/dd/yyyy").appendOptional(DateTimeFormat
@@ -27,10 +26,6 @@ object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtocol {
       }
     }
   }
-
-  implicit def getAccessTokenResponse = jsonFormat1(GetAccessTokenResponse)
-
-  implicit def getAccessTokenErrorResponse = jsonFormat2(GetAccessTokenErrorResponse)
 
   implicit def responseFormat[T: JsonFormat] = jsonFormat3(Response.apply[T])
 

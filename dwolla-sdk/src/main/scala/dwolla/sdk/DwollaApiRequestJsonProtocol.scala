@@ -4,7 +4,7 @@ import spray.json.DefaultJsonProtocol
 import dwolla.sdk.Requests._
 import scala.reflect.ClassTag
 
-object DwollaApiRequestJsonProtocol extends DefaultJsonProtocol {
+private[sdk] object DwollaApiRequestJsonProtocol extends DefaultJsonProtocol {
 
   override protected def extractFieldNames(classTag: ClassTag[_]) = {
     super.extractFieldNames(classTag).map {
