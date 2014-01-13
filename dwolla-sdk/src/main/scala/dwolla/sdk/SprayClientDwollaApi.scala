@@ -15,7 +15,7 @@ import dwolla.sdk.DwollaApiRequestJsonProtocol._
 import dwolla.sdk.DwollaApiResponseJsonProtocol._
 import spray.httpx.SprayJsonSupport._
 
-class SprayClientDwollaApi(settings: Option[DwollaApiSettings] = None)(
+private[sdk] class SprayClientDwollaApi(settings: Option[DwollaApiSettings] = None)(
   implicit system: ActorSystem,
   timeout: Timeout,
   ec: ExecutionContext) extends SprayHttpClient with DwollaApi {
@@ -45,13 +45,12 @@ class SprayClientDwollaApi(settings: Option[DwollaApiSettings] = None)(
         response.entity.asString.asJson.convertTo[GetAccessTokenResponse]
       }
       catch {
-        case e: DeserializationException => {
+        case e: DeserializationException =>
           val parsedResponse = response.entity.asString.asJson.convertTo[GetAccessTokenErrorResponse]
           throw new DwollaException(s"Error: ${parsedResponse.error}, Error description: ${
             parsedResponse
               .errorDescription
           }")
-        }
       }
     }
     else throw new DwollaException("Unsuccessful response: " + response.entity.asString)
