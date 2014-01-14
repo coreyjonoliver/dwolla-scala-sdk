@@ -5,10 +5,8 @@ import com.github.nscala_time.time.Imports._
 
 
 private[sdk] object Responses {
-  // TODO: Parse fields as snakified lowercase
   case class GetAccessTokenResponse(accessToken: String)
 
-  // TODO: Parse fields as snakified lowercase
   case class GetAccessTokenErrorResponse(error: String, errorDescription: String)
 
   case class Response[T: JsonFormat](success: Boolean, message: String, response: Option[T])
