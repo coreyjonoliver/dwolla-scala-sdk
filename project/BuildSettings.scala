@@ -1,15 +1,15 @@
 import sbt._
 import Keys._
 import com.typesafe.sbt.SbtPgp
+import com.typesafe.sbt.pgp.PgpKeys._
 
 object BuildSettings {
-  val VERSION = "1.0.0-SNAPSHOT"
+  val VERSION = "1.0.0"
 
   lazy val basicSettings = Seq(
     version := VERSION,
     homepage := Some(new URL("https://github.com/Dwolla/dwolla-scala")),
     organization := "com.dwolla",
-    organizationHomepage := Some(new URL("https://www.dwolla.com")),
     description := "Scala interface to Dwolla's API",
     startYear := Some(2013),
     licenses := Seq("Apache 2" -> new URL("http://www.apache.org/licenses/LICENSE-2.0.txt")),
@@ -28,6 +28,7 @@ object BuildSettings {
 
   lazy val dwollaModuleSettings =
     basicSettings ++
+      SbtPgp.settings ++
       Seq(
         // publishing
         crossPaths := false,
@@ -45,18 +46,13 @@ object BuildSettings {
           _ => false
         },
         pomExtra :=
-          <url>https://developers.dwolla.com/dev</url>
-            <licenses>
-              <license>
-                <name>Apache 2</name>
-                <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-                <distribution>repo</distribution>
-              </license>
-            </licenses>
-            <scm>
-              <url>git://github.com/coreyjonoliver/dwolla-sdk-scala.git</url>
-              <connection>scm:git:git@github.com:coreyjonoliver/dwolla-sdk-scala.git</connection>
-            </scm>
+          <scm>
+            <developerConnection>scm:git:ssh://git@github.com/coreyjonoliver/dwolla-sdk-scala
+              .git</developerConnection>
+            <connection>scm:git:ssh://git@github.com/coreyjonoliver/dwolla-sdk-scala.git</connection>
+            <url>https://github.com/coreyjonoliver/dwolla-sdk-scala.git</url>
+            <tag>HEAD</tag>
+          </scm>
             <developers>
               <developer>
                 <id>coreyjonoliver</id> <name>Corey Oliver</name>
@@ -68,7 +64,7 @@ object BuildSettings {
           scala.util.Properties.envOrElse("DWOLLA_PUBLISH_PASSWORD", ""))
       )
 
-  lazy val noPublishing = seq(
+  lazy val noPublishing = Seq(
     publish := (),
     publishLocal := (),
     // required until these tickets are closed https://github.com/sbt/sbt-pgp/issues/42,
