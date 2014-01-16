@@ -4,7 +4,7 @@ import com.typesafe.sbt.SbtPgp
 import com.typesafe.sbt.pgp.PgpKeys._
 
 object BuildSettings {
-  val VERSION = "1.0.0"
+  val VERSION = "1.0.1-SNAPSHOT"
 
   lazy val basicSettings = Seq(
     version := VERSION,
