@@ -184,6 +184,12 @@ class DwollaSdk(settings: Option[DwollaApiSettings] = None)(
         depositFundsResponse <- dwollaApi.depositFunds(accessToken, fundingId, pin, amount)
       } yield depositFundsResponse
     }
+
+    def withdraw(accessToken: String, fundingId: String, pin: String, amount: BigDecimal): Future[Transaction] = {
+      for {
+        withdrawFundsResponse <- dwollaApi.withdrawFunds(accessToken, fundingId, pin, amount)
+      } yield withdrawFundsResponse
+    }
   }
 
   case class User(id: String, latitude: BigDecimal, longitude: BigDecimal, name: String, city: Option[String],

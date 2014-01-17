@@ -32,6 +32,8 @@ object Main extends App {
     1.00)
   val retrieveFundingSourcesFuture = dwollaSdk.FundingSource.retrieve(accessToken, "1e76ab3e46b99e0c71d59b0f34d30a3c")
   val listFundingSourcesFuture = dwollaSdk.FundingSource.all(accessToken)
+  val withdrawTransactionFuture = dwollaSdk.Transaction.withdraw(accessToken, "1e76ab3e46b99e0c71d59b0f34d30a3c",
+    pin, 1.00)
   val createTransactionFuture = dwollaSdk.Transaction.create(accessToken, pin, "812-713-9234", .01)
   val retrieveTransactionFuture = dwollaSdk.Transaction.retrieve(accessToken, 2386180)
   val allTransactionFuture = dwollaSdk.Transaction.all(accessToken)

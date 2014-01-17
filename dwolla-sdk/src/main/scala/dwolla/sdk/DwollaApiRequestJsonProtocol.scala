@@ -23,6 +23,8 @@ private[sdk] object DwollaApiRequestJsonProtocol extends DefaultJsonProtocol {
 
   implicit val depositFundsRequestFormat = jsonFormat4(DepositFundsRequest)
 
+  implicit val withdrawFundsRequest = jsonFormat4(WithdrawFundsRequest)
+
   implicit val facilitatorFeeFormat = jsonFormat2(FacilitatorFee)
 
   implicit val sendAsGuestRequestFormat = jsonFormat17(SendAsGuestRequest)

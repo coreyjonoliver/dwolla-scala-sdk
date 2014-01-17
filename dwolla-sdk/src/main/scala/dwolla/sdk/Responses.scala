@@ -28,6 +28,8 @@ private[sdk] object Responses {
 
   type ListFundingSourcesResponse = List[ListFundingSourcesResponseElement]
 
+  type WithdrawFundsResponse = DepositFundsResponse
+
   type SendMoneyAsGuestResponse = Int
 
   type SendMoneyResponse = Int

@@ -6,6 +6,8 @@ private[sdk] object Requests {
 
   case class DepositFundsRequest(accessToken: String, fundingId: String, pin: String, amount: BigDecimal)
 
+  case class WithdrawFundsRequest(accessToken: String, fundingId: String, pin: String, amount: BigDecimal)
+
   case class SendAsGuestRequest(clientId: String, clientSecret: String, destinationId: String, amount: BigDecimal,
                                 firstName: String, lastName: String, emailAddress: String, routingNumber: String,
                                 accountNumber: String, accountType: String, assumeCosts: Option[Boolean] = None,
