@@ -14,6 +14,7 @@ private[sdk] object DwollaApiRequestJsonProtocol extends DefaultJsonProtocol {
       case "accountNumber" => "account_number"
       case "routingNumber" => "routing_number"
       case "accountType" => "account_type"
+      case "fundingId" => "funding_id"
       case n => n
     }
   }

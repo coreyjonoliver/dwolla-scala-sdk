@@ -25,10 +25,12 @@ object Main extends App {
   val dwollaSdk = new DwollaSdk(Some(apiSettings))
 
 
-//  val createAccessTokenFuture = dwollaSdk.AccessToken.create(clientId, clientSecret, "ALWcF9lH7u4LVARsri8wjs48FKU=", None)
+  //  val createAccessTokenFuture = dwollaSdk.AccessToken.create(clientId, clientSecret,
+  // "ALWcF9lH7u4LVARsri8wjs48FKU=", None)
   val retrieveBalanceFuture = dwollaSdk.Balance.retrieve(accessToken)
   val depositTransactionFuture = dwollaSdk.Transaction.deposit(accessToken, "1e76ab3e46b99e0c71d59b0f34d30a3c", pin,
     1.00)
+  val retrieveFundingSourcesFuture = dwollaSdk.FundingSource.retrieve(accessToken, "1e76ab3e46b99e0c71d59b0f34d30a3c")
   val listFundingSourcesFuture = dwollaSdk.FundingSource.all(accessToken)
   val createTransactionFuture = dwollaSdk.Transaction.create(accessToken, pin, "812-713-9234", .01)
   val retrieveTransactionFuture = dwollaSdk.Transaction.retrieve(accessToken, 2386180)
@@ -38,9 +40,10 @@ object Main extends App {
   val nearbyUserFuture = dwollaSdk.User.nearby(clientId, clientSecret, 41.5908, 93.6208)
 
   val createAuthenticationUrlResult = dwollaSdk.AuthenticationUrl.create(clientId, List("Balance"))
-//  val createAccessToken = Await.result(createAccessTokenFuture, timeout.duration)
+  //  val createAccessToken = Await.result(createAccessTokenFuture, timeout.duration)
   val retrieveBalanceResult = Await.result(retrieveBalanceFuture, timeout.duration)
   val depositTransactionResult = Await.result(depositTransactionFuture, timeout.duration)
+  val retrieveFundingSourcesResult = Await.result(retrieveFundingSourcesFuture, timeout.duration)
   val listFundingSourcesResult = Await.result(listFundingSourcesFuture, timeout.duration)
   val createTransactionResult = Await.result(createTransactionFuture, timeout.duration)
   val retrieveTransactionResult = Await.result(retrieveTransactionFuture, timeout.duration)
@@ -50,9 +53,10 @@ object Main extends App {
   val nearbyUserResult = Await.result(nearbyUserFuture, timeout.duration)
 
   println(createAuthenticationUrlResult)
-//  println(createAccessToken)
+  //  println(createAccessToken)
   println(retrieveBalanceResult)
   println(depositTransactionResult)
+  println(retrieveFundingSourcesResult)
   println(listFundingSourcesResult)
   println(createTransactionResult)
   println(retrieveTransactionResult)

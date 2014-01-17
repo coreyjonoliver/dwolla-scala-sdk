@@ -129,7 +129,7 @@ class DwollaSdk(settings: Option[DwollaApiSettings] = None)(
       } yield addFundingSourceResponse
     }
 
-    def retrieve(accessToken: String, id: Int): Future[FundingSource] = {
+    def retrieve(accessToken: String, id: String): Future[FundingSource] = {
       for {
         getFundingSourceDetailsResponse <- dwollaApi.getFundingSourceDetails(accessToken, id)
       } yield getFundingSourceDetailsResponse

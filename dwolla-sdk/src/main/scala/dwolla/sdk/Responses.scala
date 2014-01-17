@@ -15,7 +15,7 @@ private[sdk] object Responses {
                                       processingType: String)
 
   case class GetFundingSourceDetailsResponse(id: String, name: String, `type`: String, verified: Boolean,
-                                             processingType: String, balance: BigDecimal)
+                                             processingType: String, balance: Option[BigDecimal])
 
   case class DepositFundsResponse(amount: BigDecimal, date: Option[DateTime], destinationId: String,
                                   destinationName: String, id: Int, sourceId: String, sourceName: String,
