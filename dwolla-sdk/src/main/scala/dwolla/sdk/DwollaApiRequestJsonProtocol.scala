@@ -22,8 +22,8 @@ private[sdk] object DwollaApiRequestJsonProtocol extends DefaultJsonProtocol {
 
   implicit val accountTypeFormat = new JsonFormat[AccountType] {
     def write(accountType: AccountType) = accountType match {
-      case AccountType.Checking => JsString("Checking")
-      case AccountType.Savings => JsString("Savings")
+      case Requests.AccountType.Checking => JsString("Checking")
+      case Requests.AccountType.Savings => JsString("Savings")
     }
 
     def read(value: JsValue) = ???
