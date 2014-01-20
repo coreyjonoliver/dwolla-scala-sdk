@@ -10,6 +10,11 @@ import scala.language.implicitConversions
 import scala.Some
 import spray.http.Uri
 
+object AccountType extends Enumeration {
+  type AccountType = Value
+  val Checking, Savings = Value
+}
+
 class DwollaSdk(settings: Option[DwollaApiSettings] = None)(
   implicit system: ActorSystem,
   timeout: Timeout,
@@ -17,7 +22,17 @@ class DwollaSdk(settings: Option[DwollaApiSettings] = None)(
 
   private val dwollaApi = new SprayClientDwollaApi(settings)
 
+  import AccountType._
   object Mappings {
+    import dwolla.sdk.Requests.{AccountType => RequestAccountType}
+
+    implicit def accountType2AccountType(accountType: AccountType): RequestAccountType.AccountType = {
+      accountType match {
+        case AccountType.Checking => RequestAccountType.Checking
+        case AccountType.Savings => RequestAccountType.Savings
+      }
+    }
+
     implicit def getTransactionDetailsResponse2Transaction(response:
                                                            GetTransactionDetailsResponse): Transaction = {
       val fees = response.fees.getOrElse(List()).map(f => Fee(f.id, f.amount, f.`type`))
@@ -121,6 +136,15 @@ class DwollaSdk(settings: Option[DwollaApiSettings] = None)(
 
     import Mappings._
 
+    def create(accessToken: String, accountNumber: String, routingNumber: String, accountType: AccountType,
+               name: String): Future[FundingSource] = {
+      for {
+        addFundingSourceResponse <- dwollaApi.addFundingSource(accessToken, accountNumber, routingNumber,
+          accountType, name)
+      } yield addFundingSourceResponse
+    }
+
+    @deprecated("Use the DwollaSdk.FundingSource.create overload which provides an AccountType parameter", "1.1.1")
     def create(accessToken: String, accountNumber: String, routingNumber: String, accountType: String,
                name: String): Future[FundingSource] = {
       for {
@@ -219,5 +243,4 @@ class DwollaSdk(settings: Option[DwollaApiSettings] = None)(
       } yield findUsersNearbyResponse
     }
   }
-
 }

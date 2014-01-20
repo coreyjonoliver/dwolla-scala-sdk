@@ -1,6 +1,17 @@
 package dwolla.sdk
 
 private[sdk] object Requests {
+  object AccountType extends Enumeration {
+    type AccountType = Value
+    val Checking = Value
+    val Savings = Value
+  }
+
+  import AccountType.AccountType
+
+  case class AddFundingSourceRequest2(accessToken: String, accountNumber: String, routingNumber: String,
+                                     accountType: AccountType, name: String)
+
   case class AddFundingSourceRequest(accessToken: String, accountNumber: String, routingNumber: String,
                                      accountType: String, name: String)
 

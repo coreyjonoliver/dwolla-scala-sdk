@@ -1,7 +1,8 @@
 package dwolla.sdk
 
-import spray.json.DefaultJsonProtocol
+import spray.json.{JsValue, JsString, JsonFormat, DefaultJsonProtocol}
 import dwolla.sdk.Requests._
+import dwolla.sdk.Requests.AccountType._
 import scala.reflect.ClassTag
 
 private[sdk] object DwollaApiRequestJsonProtocol extends DefaultJsonProtocol {
@@ -18,6 +19,17 @@ private[sdk] object DwollaApiRequestJsonProtocol extends DefaultJsonProtocol {
       case n => n
     }
   }
+
+  implicit val accountTypeFormat = new JsonFormat[AccountType] {
+    def write(accountType: AccountType) = accountType match {
+      case AccountType.Checking => JsString("Checking")
+      case AccountType.Savings => JsString("Savings")
+    }
+
+    def read(value: JsValue) = ???
+  }
+
+  implicit val addFundingSourceRequest2Format = jsonFormat5(AddFundingSourceRequest2)
 
   implicit val addFundingSourceRequestFormat = jsonFormat5(AddFundingSourceRequest)
 

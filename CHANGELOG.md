@@ -1,8 +1,14 @@
-## 1.1.2 (unreleased)
+## 1.1.1 (unreleased)
+
+DEPRECATIONS:
+
+  - The `DwollaSdk.FundingSource.create` method with no `AccountType` parameter has been overloaded
+  to take a parameter of `AccountType`.
 
 NEW FUNCTIONALITY:
 
   - Add support for withdraw endpoint.
+  - Overload `DwollaSdk.FundingSource.create` to take in a parameter of type `AccountType`.
 
 BUG FIXES:
 

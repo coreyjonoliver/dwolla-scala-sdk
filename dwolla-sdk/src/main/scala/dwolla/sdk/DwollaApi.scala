@@ -2,6 +2,7 @@ package dwolla.sdk
 
 import scala.concurrent.Future
 import dwolla.sdk.Responses._
+import dwolla.sdk.Requests.AccountType.AccountType
 
 private[sdk] case class FacilitatorFee(destinationId: String,
                                        amount: BigDecimal)
@@ -12,6 +13,9 @@ private[sdk] trait DwollaApi {
   Future[GetAccessTokenResponse]
 
   def getBalance(accessToken: String): Future[GetBalanceResponse]
+
+  def addFundingSource(accessToken: String, accountNumber: String, routingNumber: String, accountType: AccountType,
+                       name: String): Future[AddFundingSourceResponse]
 
   def addFundingSource(accessToken: String, accountNumber: String, routingNumber: String, accountType: String,
                        name: String): Future[AddFundingSourceResponse]

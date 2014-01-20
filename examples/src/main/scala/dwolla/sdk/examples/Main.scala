@@ -1,7 +1,7 @@
 package dwolla.sdk.examples
 
 import scala.concurrent.{Await, ExecutionContext}
-import dwolla.sdk.{DwollaApiSettings, DwollaSdk}
+import dwolla.sdk.{DwollaApiSettings, DwollaSdk, AccountType}
 import akka.util.Timeout
 import scala.concurrent.duration._
 import akka.actor.ActorSystem
@@ -27,13 +27,18 @@ object Main extends App {
 
   //  val createAccessTokenFuture = dwollaSdk.AccessToken.create(clientId, clientSecret,
   // "ALWcF9lH7u4LVARsri8wjs48FKU=", None)
+  // TODO add sdk call using new add funding sources endpoint
   val retrieveBalanceFuture = dwollaSdk.Balance.retrieve(accessToken)
   val depositTransactionFuture = dwollaSdk.Transaction.deposit(accessToken, "1e76ab3e46b99e0c71d59b0f34d30a3c", pin,
     1.00)
   val retrieveFundingSourcesFuture = dwollaSdk.FundingSource.retrieve(accessToken, "1e76ab3e46b99e0c71d59b0f34d30a3c")
+//  val createFundingSourceFuture = dwollaSdk.FundingSource.create(accessToken, "123456789", "333333334", "Savings",
+//    "My Savings")
+  val createFundingSource2Future = dwollaSdk.FundingSource.create(accessToken, "123456789", "333333334",
+    AccountType.Savings, "My Savings")
   val listFundingSourcesFuture = dwollaSdk.FundingSource.all(accessToken)
   val withdrawTransactionFuture = dwollaSdk.Transaction.withdraw(accessToken, "1e76ab3e46b99e0c71d59b0f34d30a3c",
-    pin, 1.00)
+    pin, 0.01)
   val createTransactionFuture = dwollaSdk.Transaction.create(accessToken, pin, "812-713-9234", .01)
   val retrieveTransactionFuture = dwollaSdk.Transaction.retrieve(accessToken, 2386180)
   val allTransactionFuture = dwollaSdk.Transaction.all(accessToken)
@@ -45,6 +50,8 @@ object Main extends App {
   //  val createAccessToken = Await.result(createAccessTokenFuture, timeout.duration)
   val retrieveBalanceResult = Await.result(retrieveBalanceFuture, timeout.duration)
   val depositTransactionResult = Await.result(depositTransactionFuture, timeout.duration)
+//  val createFundingSourceResult = Await.result(createFundingSourceFuture, timeout.duration)
+  val createFundingSource2Result = Await.result(createFundingSource2Future, timeout.duration)
   val retrieveFundingSourcesResult = Await.result(retrieveFundingSourcesFuture, timeout.duration)
   val listFundingSourcesResult = Await.result(listFundingSourcesFuture, timeout.duration)
   val createTransactionResult = Await.result(createTransactionFuture, timeout.duration)
@@ -58,6 +65,8 @@ object Main extends App {
   //  println(createAccessToken)
   println(retrieveBalanceResult)
   println(depositTransactionResult)
+//  println(createFundingSourceResult)
+  println(createFundingSource2Result)
   println(retrieveFundingSourcesResult)
   println(listFundingSourcesResult)
   println(createTransactionResult)
