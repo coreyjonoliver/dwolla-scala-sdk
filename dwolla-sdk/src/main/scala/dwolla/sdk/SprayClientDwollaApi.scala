@@ -92,13 +92,6 @@ private[sdk] class SprayClientDwollaApi(settings: Option[DwollaApiSettings] = No
   def addFundingSource(accessToken: String, accountNumber: String, routingNumber: String, accountType: AccountType,
                        name: String): Future[AddFundingSourceResponse] = {
     val uri = Uri("/oauth/rest/fundingsources/")
-    val raw = AddFundingSourceRequest2(accessToken, accountNumber, routingNumber, accountType, name)
-    executeTo(Post(uri, raw), mapResponse[AddFundingSourceResponse])
-  }
-
-  def addFundingSource(accessToken: String, accountNumber: String, routingNumber: String, accountType: String,
-                       name: String): Future[AddFundingSourceResponse] = {
-    val uri = Uri("/oauth/rest/fundingsources/")
     val raw = AddFundingSourceRequest(accessToken, accountNumber, routingNumber, accountType, name)
     executeTo(Post(uri, raw), mapResponse[AddFundingSourceResponse])
   }

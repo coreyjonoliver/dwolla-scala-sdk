@@ -2,7 +2,7 @@
 
 DEPRECATIONS:
 
-  - The `DwollaSdk.FundingSource.create` method with no `AccountType` parameter has been overloaded
+  - The `DwollaSdk.FundingSource.create` method with no `AccountType` parameter has been overloaded.
   to take a parameter of `AccountType`.
 
 NEW FUNCTIONALITY:
@@ -14,3 +14,9 @@ BUG FIXES:
 
   - Specify the type of the `id` parameter for `DwollaSdk.FundingSource.retrieve` as `String` instead of `Int`.
   - Change return type of `DwollaSdk.FundingSource.all` from `Future[List[Transaction]]` to `Future[Seq[Transaction]]`.
+
+## 2.0.0
+
+BACKWARDS INCOMPATIBILITY:
+
+  - The `DwollaSdk.FundingSource.create` method with no `AccountType` parameter is removed.

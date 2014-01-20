@@ -32,9 +32,7 @@ object Main extends App {
   val depositTransactionFuture = dwollaSdk.Transaction.deposit(accessToken, "1e76ab3e46b99e0c71d59b0f34d30a3c", pin,
     1.00)
   val retrieveFundingSourcesFuture = dwollaSdk.FundingSource.retrieve(accessToken, "1e76ab3e46b99e0c71d59b0f34d30a3c")
-//  val createFundingSourceFuture = dwollaSdk.FundingSource.create(accessToken, "123456789", "333333334", "Savings",
-//    "My Savings")
-  val createFundingSource2Future = dwollaSdk.FundingSource.create(accessToken, "123456789", "333333334",
+  val createFundingSourceFuture = dwollaSdk.FundingSource.create(accessToken, "123456789", "333333334",
     AccountType.Savings, "My Savings")
   val listFundingSourcesFuture = dwollaSdk.FundingSource.all(accessToken)
   val withdrawTransactionFuture = dwollaSdk.Transaction.withdraw(accessToken, "1e76ab3e46b99e0c71d59b0f34d30a3c",
@@ -50,8 +48,7 @@ object Main extends App {
   //  val createAccessToken = Await.result(createAccessTokenFuture, timeout.duration)
   val retrieveBalanceResult = Await.result(retrieveBalanceFuture, timeout.duration)
   val depositTransactionResult = Await.result(depositTransactionFuture, timeout.duration)
-//  val createFundingSourceResult = Await.result(createFundingSourceFuture, timeout.duration)
-  val createFundingSource2Result = Await.result(createFundingSource2Future, timeout.duration)
+  val createFundingSourceResult = Await.result(createFundingSourceFuture, timeout.duration)
   val retrieveFundingSourcesResult = Await.result(retrieveFundingSourcesFuture, timeout.duration)
   val listFundingSourcesResult = Await.result(listFundingSourcesFuture, timeout.duration)
   val createTransactionResult = Await.result(createTransactionFuture, timeout.duration)
@@ -65,8 +62,7 @@ object Main extends App {
   //  println(createAccessToken)
   println(retrieveBalanceResult)
   println(depositTransactionResult)
-//  println(createFundingSourceResult)
-  println(createFundingSource2Result)
+  println(createFundingSourceResult)
   println(retrieveFundingSourcesResult)
   println(listFundingSourcesResult)
   println(createTransactionResult)

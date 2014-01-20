@@ -9,11 +9,8 @@ private[sdk] object Requests {
 
   import AccountType.AccountType
 
-  case class AddFundingSourceRequest2(accessToken: String, accountNumber: String, routingNumber: String,
-                                     accountType: AccountType, name: String)
-
   case class AddFundingSourceRequest(accessToken: String, accountNumber: String, routingNumber: String,
-                                     accountType: String, name: String)
+                                     accountType: AccountType, name: String)
 
   case class DepositFundsRequest(accessToken: String, fundingId: String, pin: String, amount: BigDecimal)
 
