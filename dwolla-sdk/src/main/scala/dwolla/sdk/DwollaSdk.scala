@@ -159,9 +159,10 @@ class DwollaSdk(settings: Option[DwollaApiSettings] = None)(
       } yield getFundingSourceDetailsResponse
     }
 
-    def all(accessToken: String): Future[Seq[FundingSource]] = {
+    def all(accessToken: String, destinationId: Option[String] = None,
+            destinationType: Option[String] = None): Future[Seq[FundingSource]] = {
       for {
-        fundingSourcesListingResponse <- dwollaApi.listFundingSources(accessToken)
+        fundingSourcesListingResponse <- dwollaApi.listFundingSources(accessToken, destinationId, destinationType)
       } yield fundingSourcesListingResponse
     }
   }

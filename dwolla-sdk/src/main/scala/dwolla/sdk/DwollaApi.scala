@@ -25,7 +25,8 @@ private[sdk] trait DwollaApi {
   def depositFunds(accessToken: String, fundingId: String, pin: String,
                    amount: BigDecimal): Future[DepositFundsResponse]
 
-  def listFundingSources(accessToken: String): Future[ListFundingSourcesResponse]
+  def listFundingSources(accessToken: String, destinationId: Option[String],
+                         destinationType: Option[String]): Future[ListFundingSourcesResponse]
 
   def withdrawFunds(accessToken: String, fundingId: String, pin: String,
                     amount: BigDecimal): Future[WithdrawFundsResponse]
