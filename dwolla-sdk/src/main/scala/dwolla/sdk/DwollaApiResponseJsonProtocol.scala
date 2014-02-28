@@ -2,14 +2,13 @@ package dwolla.sdk
 
 import spray.json._
 import com.github.nscala_time.time.Imports._
-import org.joda.time.format.DateTimeFormatterBuilder
+import org.joda.time.format.ISODateTimeFormat
 import dwolla.sdk.Responses._
 
 private[sdk] object DwollaApiResponseJsonProtocol extends CapitalizedJsonProtocol {
 
   implicit object JodaDateTimeFormat extends RootJsonFormat[Option[DateTime]] {
-    val formatter = new DateTimeFormatterBuilder().appendPattern("MM/dd/yyyy").appendOptional(DateTimeFormat
-      .forPattern(" HH:mm:ss").getParser()).toFormatter()
+    val formatter = ISODateTimeFormat.dateTimeParser()
 
     def write(obj: Option[DateTime]): JsValue = {
       obj match {

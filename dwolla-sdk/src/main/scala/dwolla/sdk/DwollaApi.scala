@@ -39,7 +39,8 @@ private[sdk] trait DwollaApi {
                        additionalFees: Seq[FacilitatorFee] = List(), facilitatorAmount: Option[BigDecimal] = None,
                        assumeAdditionalFees: Option[Boolean] = None): Future[SendMoneyAsGuestResponse]
 
-  def listAllTransactions(accessToken: String): Future[Seq[GetTransactionDetailsResponse]]
+  def listAllTransactions(accessToken: String, sinceDate: Option[String], endDate: Option[String], types: Option[String], limit: Option[Int],
+                          skip: Option[Int], groupId: Option[String]): Future[Seq[GetTransactionDetailsResponse]]
 
 
   def issueRefund(accessToken: String, pin: String, transactionId: Int, fundsSource: Int, amount: BigDecimal,

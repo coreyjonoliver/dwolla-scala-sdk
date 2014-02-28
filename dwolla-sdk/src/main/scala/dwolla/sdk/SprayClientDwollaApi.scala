@@ -149,9 +149,16 @@ private[sdk] class SprayClientDwollaApi(settings: Option[DwollaApiSettings] = No
     executeTo(Post(uri, raw), mapResponse[SendMoneyAsGuestResponse])
   }
 
-  def listAllTransactions(accessToken: String): Future[ListAllTransactionsResponse] = {
+  def listAllTransactions(accessToken: String, sinceDate: Option[String],
+                          endDate: Option[String], types: Option[String], limit: Option[Int],
+                          skip: Option[Int], groupId: Option[String]): Future[ListAllTransactionsResponse] = {
     val uri = Uri(s"/oauth/rest/transactions/")
-    val uriWithQuery = uri.withQuery(Map("oauth_token" -> accessToken))
+
+    val optionalParams = Map("sinceDate" -> sinceDate,
+        "endDate" -> endDate, "types" -> types, "limit" -> limit, "skip" -> skip,
+        "groupId" -> groupId).filter(_._2.isDefined).map(x => (x._1, x._2.get.toString))
+
+    val uriWithQuery = uri.withQuery(optionalParams + ("oauth_token" -> accessToken))
     executeTo(Get(uriWithQuery), mapResponse[ListAllTransactionsResponse])
   }
 
