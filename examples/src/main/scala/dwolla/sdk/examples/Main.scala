@@ -22,7 +22,7 @@ object Main extends App {
   val apiHost = sys.env("DWOLLA_API_HOST")
 
   val apiSettings = new DwollaApiSettings(apiHost, 80, false)
-  val dwollaSdk = new DwollaSdk()
+  val dwollaSdk = new DwollaSdk(Some(apiSettings))
 
 
   //  val createAccessTokenFuture = dwollaSdk.AccessToken.create(clientId, clientSecret,
