@@ -109,9 +109,12 @@ private[sdk] class SprayClientDwollaApi(settings: Option[DwollaApiSettings] = No
     executeTo(Post(uri, raw), mapResponse[DepositFundsResponse])
   }
 
-  def listFundingSources(accessToken: String): Future[ListFundingSourcesResponse] = {
+  def listFundingSources(accessToken: String, destinationId: Option[String],
+                         destinationType: Option[String]): Future[ListFundingSourcesResponse] = {
     val uri = Uri("/oauth/rest/fundingsources/")
-    val uriWithQuery = uri.withQuery(Map("oauth_token" -> accessToken))
+    val params = Map("destinationId" -> destinationId, "destinationType" -> destinationType)
+
+    val uriWithQuery = uri.withQuery(filterOptional(params) + ("oauth_token" -> accessToken))
     executeTo(Get(uriWithQuery), mapResponse[ListFundingSourcesResponse])
   }
 
@@ -142,9 +145,15 @@ private[sdk] class SprayClientDwollaApi(settings: Option[DwollaApiSettings] = No
     executeTo(Post(uri, raw), mapResponse[SendMoneyAsGuestResponse])
   }
 
-  def listAllTransactions(accessToken: String): Future[ListAllTransactionsResponse] = {
+  def listAllTransactions(accessToken: String, sinceDate: Option[String],
+                          endDate: Option[String], types: Option[String], limit: Option[Int],
+                          skip: Option[Int], groupId: Option[String]): Future[ListAllTransactionsResponse] = {
     val uri = Uri(s"/oauth/rest/transactions/")
-    val uriWithQuery = uri.withQuery(Map("oauth_token" -> accessToken))
+
+    val params = Map("sinceDate" -> sinceDate, "endDate" -> endDate, "types" -> types, "limit" -> limit,
+        "skip" -> skip, "groupId" -> groupId)
+
+    val uriWithQuery = uri.withQuery(filterOptional(params) + ("oauth_token" -> accessToken))
     executeTo(Get(uriWithQuery), mapResponse[ListAllTransactionsResponse])
   }
 
@@ -187,5 +196,9 @@ private[sdk] class SprayClientDwollaApi(settings: Option[DwollaApiSettings] = No
       "latitude" -> latitude.toString,
       "longitude" -> longitude.toString))
     executeTo(Get(uriWithQuery), mapResponse[FindUsersNearbyResponse])
+  }
+
+  private def filterOptional(optionalParams: Map[String, Option[Any]]) = {
+    optionalParams.filter(_._2.isDefined).map(x => (x._1, x._2.get.toString))
   }
 }

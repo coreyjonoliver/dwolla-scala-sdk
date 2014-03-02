@@ -9,6 +9,9 @@ NEW FUNCTIONALITY:
 
   - Add support for withdraw endpoint.
   - Overload `DwollaSdk.FundingSource.create` to take in a parameter of type `AccountType`.
+  - Add optional parameters to `Dwolla.Transaction.all` which allow filtering of transactions by `sinceDate`, `endDate`, `types`, `limit`, 
+  `skip`, and `groupId`.
+  - Add optional parameters to `DwollaSdk.FundingSource.all` which allow filtering of funding sources by `destinationId` and `destinationType`.
 
 BUG FIXES:
 

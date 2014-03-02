@@ -1,7 +1,7 @@
 package dwolla.sdk.examples
 
 import scala.concurrent.{Await, ExecutionContext}
-import dwolla.sdk.{DwollaApiSettings, DwollaSdk, AccountType}
+import dwolla.sdk.{AccountType, DwollaApiSettings, DwollaSdk}
 import akka.util.Timeout
 import scala.concurrent.duration._
 import akka.actor.ActorSystem
@@ -34,11 +34,13 @@ object Main extends App {
   val retrieveFundingSourcesFuture = dwollaSdk.FundingSource.retrieve(accessToken, "1e76ab3e46b99e0c71d59b0f34d30a3c")
   val createFundingSourceFuture = dwollaSdk.FundingSource.create(accessToken, "123456789", "333333334",
     AccountType.Savings, "My Savings")
+  val filteredFundingSourcesFuture = dwollaSdk.FundingSource.all(accessToken, Some("812-467-6276"), Some("Dwolla"))
   val listFundingSourcesFuture = dwollaSdk.FundingSource.all(accessToken)
   val withdrawTransactionFuture = dwollaSdk.Transaction.withdraw(accessToken, "1e76ab3e46b99e0c71d59b0f34d30a3c",
     pin, 0.01)
   val createTransactionFuture = dwollaSdk.Transaction.create(accessToken, pin, "812-713-9234", .01)
   val retrieveTransactionFuture = dwollaSdk.Transaction.retrieve(accessToken, 2386180)
+  val filteredTransactionFuture = dwollaSdk.Transaction.all(accessToken, Some("2013-11-19T19:00:00Z"), None, None, Some(200), Some(500), None)
   val allTransactionFuture = dwollaSdk.Transaction.all(accessToken)
   val retrieveUserFuture1 = dwollaSdk.User.retrieve(clientId, clientSecret, "812-713-9234")
   val retrieveUserFuture2 = dwollaSdk.User.retrieve(accessToken)
@@ -51,9 +53,11 @@ object Main extends App {
   val createFundingSourceResult = Await.result(createFundingSourceFuture, timeout.duration)
   val retrieveFundingSourcesResult = Await.result(retrieveFundingSourcesFuture, timeout.duration)
   val listFundingSourcesResult = Await.result(listFundingSourcesFuture, timeout.duration)
+  val filteredFundingSourcesResult = Await.result(filteredFundingSourcesFuture, timeout.duration)
   val createTransactionResult = Await.result(createTransactionFuture, timeout.duration)
   val retrieveTransactionResult = Await.result(retrieveTransactionFuture, timeout.duration)
   val allTransactionResult = Await.result(allTransactionFuture, timeout.duration)
+  val filteredTransactionResult = Await.result(filteredTransactionFuture, timeout.duration)
   val retrieveUserResult1 = Await.result(retrieveUserFuture1, timeout.duration)
   val retrieveUserResult2 = Await.result(retrieveUserFuture2, timeout.duration)
   val nearbyUserResult = Await.result(nearbyUserFuture, timeout.duration)
@@ -65,9 +69,11 @@ object Main extends App {
   println(createFundingSourceResult)
   println(retrieveFundingSourcesResult)
   println(listFundingSourcesResult)
+  println(filteredFundingSourcesResult)
   println(createTransactionResult)
   println(retrieveTransactionResult)
   println(allTransactionResult)
+  println(filteredTransactionResult)
   println(retrieveUserResult1)
   println(retrieveUserResult2)
   println(nearbyUserResult)

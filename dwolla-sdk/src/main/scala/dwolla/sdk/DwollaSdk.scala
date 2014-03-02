@@ -150,9 +150,10 @@ class DwollaSdk(settings: Option[DwollaApiSettings] = None)(
       } yield getFundingSourceDetailsResponse
     }
 
-    def all(accessToken: String): Future[Seq[FundingSource]] = {
+    def all(accessToken: String, destinationId: Option[String] = None,
+            destinationType: Option[String] = None): Future[Seq[FundingSource]] = {
       for {
-        fundingSourcesListingResponse <- dwollaApi.listFundingSources(accessToken)
+        fundingSourcesListingResponse <- dwollaApi.listFundingSources(accessToken, destinationId, destinationType)
       } yield fundingSourcesListingResponse
     }
   }
@@ -188,9 +189,11 @@ class DwollaSdk(settings: Option[DwollaApiSettings] = None)(
       } yield transactionByIdResponse
     }
 
-    def all(accessToken: String): Future[Seq[Transaction]] = {
+    def all(accessToken: String, sinceDate: Option[String] = None, endDate: Option[String] = None,
+            types: Option[String] = None, limit: Option[Int] = None, skip: Option[Int] = None,
+            groupId: Option[String] = None): Future[Seq[Transaction]] = {
       for {
-        transactionListingResponse <- dwollaApi.listAllTransactions(accessToken)
+        transactionListingResponse <- dwollaApi.listAllTransactions(accessToken, sinceDate, endDate, types, limit, skip, groupId)
       } yield transactionListingResponse
     }
 
