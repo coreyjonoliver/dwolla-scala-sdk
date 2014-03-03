@@ -18,6 +18,10 @@ BUG FIXES:
   - Specify the type of the `id` parameter for `DwollaSdk.FundingSource.retrieve` as `String` instead of `Int`.
   - Change return type of `DwollaSdk.FundingSource.all` from `Future[List[Transaction]]` to `Future[Seq[Transaction]]`.
 
+IMPROVEMENTS:
+
+  - Place `DwollaSdk` return types in the `Models` namespace.
+
 ## 2.0.0 (unreleased)
 
 BACKWARDS INCOMPATIBILITY:
