@@ -133,20 +133,7 @@ class DwollaSdk(settings: Option[DwollaApiSettings] = None)(
       } yield addFundingSourceResponse
     }
 
-<<<<<<< HEAD
-    def retrieve(accessToken: String, id: String): Future[FundingSource] = {
-=======
-    @deprecated("Use the DwollaSdk.FundingSource.create overload which provides an AccountType parameter", "1.1.1")
-    def create(accessToken: String, accountNumber: String, routingNumber: String, accountType: String,
-               name: String): Future[Models.FundingSource] = {
-      for {
-        addFundingSourceResponse <- dwollaApi.addFundingSource(accessToken, accountNumber, routingNumber,
-          accountType, name)
-      } yield addFundingSourceResponse
-    }
-
     def retrieve(accessToken: String, id: String): Future[Models.FundingSource] = {
->>>>>>> master
       for {
         getFundingSourceDetailsResponse <- dwollaApi.getFundingSourceDetails(accessToken, id)
       } yield getFundingSourceDetailsResponse
